@@ -81,6 +81,8 @@ function record_file( $type, $to, $from=null, $to_id=null, $from_id=null )
 	
 	if (! $host_groups) return;	
 	
+	# the caller ID is set by the remote party and ends up in a file name
+	$from = preg_replace('/[^a-zA-Z0-9+*#_]/', '', (string)$from);
 	if (! $from) $from = 'anonymous';
 	
 	$rec_users = array();

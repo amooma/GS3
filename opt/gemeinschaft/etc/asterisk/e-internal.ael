@@ -1262,7 +1262,7 @@ context to-internal-users-self {
 			if (${cnt} < 1) {
 				Verbose(1,### Conference ${confprefix}${confnum} is empty. Free it.);
 				// remove the conference from the db so some other node can claim it:
-				TrySystem(/opt/gemeinschaft/dialplan-scripts/conf-remove ${confprefix}${confnum});
+				TrySystem(/opt/gemeinschaft/dialplan-scripts/conf-remove '${STRREPLACE(confprefix,')}${STRREPLACE(confnum,')}');
 				Verbose(1,### Conference ${confprefix}${confnum} freed.);
 			}
 		}

@@ -193,19 +193,19 @@ macro cmm-login( new_user_name ) {
 	//Playback(agent-loginok);
 	Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/sie-sind-jetzt-angemeldet);
 	Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/bitte-warten-sie);
-	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${new_user_name}');
+	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${STRREPLACE(new_user_name,')}');
 	if ("${user_name}" != "${new_user_name}") {
 		if ("${user_name}" != "") {
-			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${user_name}');
+			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${STRREPLACE(user_name,')}');
 		} else {
-			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${CALLERID(num)}');
+			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${FILTER(0-9a-zA-Z*#+_.,${CALLERID(num)})}');
 		}
 	}
 	if ("${new_phone_ip}" != "") {
-		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${new_phone_ip}');
+		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${STRREPLACE(new_phone_ip,')}');
 	}
 	if ("${old_phone_ip}" != "" && "${old_phone_ip}" != "${new_phone_ip}") {
-		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${old_phone_ip}');
+		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${STRREPLACE(old_phone_ip,')}');
 	}
 	if ("${CHANNEL(channeltype)}" = "PJSIP") {
 		Set(peer_addr=${CHANNEL(pjsip,remote_addr)});
@@ -245,18 +245,18 @@ macro cmm-logout() {
 	Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/sie-sind-abgemeldet);
 	Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/bitte-warten-sie);
 	if ("${user_name}" != "") {
-		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${user_name}');
+		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${STRREPLACE(user_name,')}');
 	} else {
-		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${CALLERID(num)}');
+		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${FILTER(0-9a-zA-Z*#+_.,${CALLERID(num)})}');
 	}
 	if ("${old_phone_ip}" != "") {
-		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${old_phone_ip}');
+		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${STRREPLACE(old_phone_ip,')}');
 	}
 	if ("${CHANNEL(channeltype)}" = "PJSIP") {
 		Set(peer_addr=${CHANNEL(pjsip,remote_addr)});
 		Set(peer_ip=${CUT(peer_addr,:,1)});
 		if ("${peer_ip}" != "${old_phone_ip}") {
-			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${peer_ip}');
+			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${STRREPLACE(peer_ip,')}');
 		}
 	}
 	
@@ -503,7 +503,7 @@ context to-conferences-self {
 			if ("${conf_parties}" = "0" && "${GLOBAL(CONF_STATE_${confnum})}" != "pending") {
 				Verbose(1,### Conference ${confprefix}${confnum} is empty. Free it.);
 				Set(GLOBAL(CONF_STATE_${confnum})=);
-				TrySystem(/opt/gemeinschaft/dialplan-scripts/conf-remove ${confprefix}${confnum});
+				TrySystem(/opt/gemeinschaft/dialplan-scripts/conf-remove '${STRREPLACE(confprefix,')}${STRREPLACE(confnum,')}');
 			}
 		}
 	}
@@ -527,14 +527,14 @@ macro queue-login( queue ) {
 	&usercode-by-ext(${user_name});
 	if ("${user_code}" = "")
 		Hangup();
-	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='internal' --case='always' --active='no');
-	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='internal' --case='busy' --active='no');
-	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='internal' --case='unavail' --active='no');
-	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='internal' --case='offline' --active='no');
-	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='external' --case='always' --active='no');
-	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='external' --case='busy' --active='no');
-	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='external' --case='unavail' --active='no');
-	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='external' --case='offline' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${STRREPLACE(user_code,')}' --source='internal' --case='always' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${STRREPLACE(user_code,')}' --source='internal' --case='busy' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${STRREPLACE(user_code,')}' --source='internal' --case='unavail' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${STRREPLACE(user_code,')}' --source='internal' --case='offline' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${STRREPLACE(user_code,')}' --source='external' --case='always' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${STRREPLACE(user_code,')}' --source='external' --case='busy' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${STRREPLACE(user_code,')}' --source='external' --case='unavail' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${STRREPLACE(user_code,')}' --source='external' --case='offline' --active='no');
 	
 	Verbose(1,### Log user ${user_name} in to queue ${queue});
 	*/
@@ -1175,7 +1175,7 @@ macro dial-log-store( muser, mtype, mnumber ) {
 			Set(mname=${CALLERID(name)});
 		}
 		Verbose(1,### Store in dial log of user ${muser}: ${mtype} ${mnumber} ${mname});
-		TrySystem(/opt/gemeinschaft/dialplan-scripts/dial-log-store '${muser}' '${mtype}' '${mnumber}' '${mname}');
+		TrySystem(/opt/gemeinschaft/dialplan-scripts/dial-log-store '${STRREPLACE(muser,')}' '${STRREPLACE(mtype,')}' '${STRREPLACE(mnumber,')}' '${STRREPLACE(mname,')}');
 	}
 	return;
 }

@@ -140,7 +140,7 @@ context user-config {
 		if ("${user_code}" = "")
 			Hangup();
 		Answer();
-		TrySystem(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='${source}' --type='${type}' --number='${number}');
+		TrySystem(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${STRREPLACE(user_code,')}' --source='${STRREPLACE(source,')}' --type='${STRREPLACE(type,')}' --number='${STRREPLACE(number,')}');
 		Wait(0.5);
 		//Playback(beep);
 		if ("${type}" = "std") {
@@ -169,7 +169,7 @@ context user-config {
 		if ("${user_code}" = "")
 			Hangup();
 		Answer();
-		TrySystem(/opt/gemeinschaft/scripts/gs-callforward-timeout-set --user='${user_code}' --timeout='${timeout}');
+		TrySystem(/opt/gemeinschaft/scripts/gs-callforward-timeout-set --user='${STRREPLACE(user_code,')}' --timeout='${STRREPLACE(timeout,')}');
 		Wait(0.5);
 		//Playback(beep);
 		Playback(klingeldauer);
@@ -316,8 +316,8 @@ context user-config {
 		if ("${user_code}" = "")
 			Hangup();
 		Answer();
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='vml' --number='vm${user_name}');
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm${user_name}');
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${STRREPLACE(user_code,')}' --source='internal' --type='vml' --number='vm${STRREPLACE(user_name,')}');
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${STRREPLACE(user_code,')}' --source='external' --type='vml' --number='vm${STRREPLACE(user_name,')}');
 		&user-call-forward-activate-numeric(vml,0,0,1);
 		&user-call-forward-activate-numeric(vml,1,0,1);
 		&queue-logout-all-silent();
@@ -334,8 +334,8 @@ context user-config {
 		if ("${user_code}" = "")
 			Hangup();
 		Answer();
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='vml' --number='vm*${user_name}');
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm*${user_name}');
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${STRREPLACE(user_code,')}' --source='internal' --type='vml' --number='vm*${STRREPLACE(user_name,')}');
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${STRREPLACE(user_code,')}' --source='external' --type='vml' --number='vm*${STRREPLACE(user_name,')}');
 		&user-call-forward-activate-numeric(vml,0,0,1);
 		&user-call-forward-activate-numeric(vml,1,0,1);
 		&queue-logout-all-silent();
@@ -353,13 +353,13 @@ context user-config {
 			Hangup();
 		Answer();
 		Set(tonumber=${EXTEN:2});
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${STRREPLACE(user_code,')}' --source='internal' --type='var' --number='${STRREPLACE(tonumber,')}');
 		if ("${SYSTEMSTATUS}" != "SUCCESS") {
 			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/sie-haben-keine-berechtigung-fuer-diese-zielrufnummer);
 			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/auf-wiedersehen);
 			Hangup();
 		}
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${STRREPLACE(user_code,')}' --source='external' --type='var' --number='${STRREPLACE(tonumber,')}');
 		&user-call-forward-activate-numeric(var,0,0,1);
 		&user-call-forward-activate-numeric(var,1,0,1);
 		&queue-logout-all-silent();
@@ -376,8 +376,8 @@ context user-config {
 		if ("${user_code}" = "")
 			Hangup();
 		Answer();
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='vml' --number='vm${user_name}');
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm${user_name}');
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${STRREPLACE(user_code,')}' --source='internal' --type='vml' --number='vm${STRREPLACE(user_name,')}');
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${STRREPLACE(user_code,')}' --source='external' --type='vml' --number='vm${STRREPLACE(user_name,')}');
 		&user-call-forward-activate-numeric(vml,0,0,1);
 		&user-call-forward-activate-numeric(vml,1,0,1);
 		&queue-logout-all-silent();
@@ -418,7 +418,7 @@ macro user-config-comment( mactive ) {
 	
 	Verbose(1,### User ${user_name}: set comment off-time ${mactive});
 	Answer();
-	TrySystem(/opt/gemeinschaft/dialplan-scripts/user-comment-offtime-set '${user_name}' '${mactive}');
+	TrySystem(/opt/gemeinschaft/dialplan-scripts/user-comment-offtime-set '${STRREPLACE(user_name,')}' '${STRREPLACE(mactive,')}');
 	Wait(0.5);
 	Playback(beep);
 	Hangup();
@@ -440,7 +440,7 @@ macro user-config-clir( mdest, mactive_num ) {
 	
 	Verbose(1,### User ${user_name}: set CLIR ${mdest}: ${mactive});
 	Answer();
-	TrySystem(/opt/gemeinschaft/scripts/gs-clir-activate --user='${user_code}' --dest='${mdest}' --active='${mactive}');
+	TrySystem(/opt/gemeinschaft/scripts/gs-clir-activate --user='${STRREPLACE(user_code,')}' --dest='${STRREPLACE(mdest,')}' --active='${STRREPLACE(mactive,')}');
 	Wait(0.5);
 	Playback(beep);
 	Hangup();
@@ -459,7 +459,7 @@ macro user-config-call-waiting( mactive_num ) {
 	
 	Verbose(1,### User ${user_name}: set Call Waiting: ${mactive});
 	Answer();
-	TrySystem(/opt/gemeinschaft/scripts/gs-callwaiting-activate --user='${user_code}' --active='${mactive}');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callwaiting-activate --user='${STRREPLACE(user_code,')}' --active='${STRREPLACE(mactive,')}');
 	return;
 }
 
@@ -492,7 +492,7 @@ macro user-call-forward-activate-numeric( mtype, msource_num, mcase_num, mactive
 	Verbose(1,### User ${user_name}: set call forward ${msource} ${mtype} ${mcase} ${mactive_num});
 	
 	Answer();
-	System(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='${msource}' --case='${mcase}' --active='${mactive}');
+	System(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${STRREPLACE(user_code,')}' --source='${STRREPLACE(msource,')}' --case='${STRREPLACE(mcase,')}' --active='${STRREPLACE(mactive,')}');
 	return;
 }
 

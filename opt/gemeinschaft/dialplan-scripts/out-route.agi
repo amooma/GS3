@@ -47,6 +47,9 @@ function _no_more_routes( $idx=1 )
 
 
 $number = ($argc > 1) ? trim($argv[1]) : '';
+# the number ends up in the Dial() string. "&", "/" or "@" in it would
+# add channels the routing never allowed
+$number = preg_replace('/[^0-9a-zA-Z*#+._\-]/', '', $number);
 if ($number == '') {
 	gs_agi_verbose( "### Empty number" );
 	gs_agi_hangup();
