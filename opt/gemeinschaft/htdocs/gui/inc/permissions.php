@@ -65,7 +65,7 @@ function _get_kostenstellen_lvm( $user )
 		# without leading "0" in their LDAP
 	//}
 	$u = gs_ldap_get_first( $ldap, GS_LDAP_SEARCHBASE,
-		'('. GS_LDAP_PROP_USER .'='. $user .')',
+		'('. GS_LDAP_PROP_USER .'='. ldap_escape($user, '', LDAP_ESCAPE_FILTER) .')',
 		array($kostenstelle_prop) );
 	if (isGsError($u)) return false;
 	if (! is_array($u)) {

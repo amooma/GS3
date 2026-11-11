@@ -55,10 +55,15 @@ $focus_field = false;
 
 if (@$_REQUEST['login_action'] === 'forgotpwd') {
 	
-	$login_user = trim(@$_REQUEST['login_user']);
+	$login_user = is_string(@$_REQUEST['login_user']) ? trim($_REQUEST['login_user']) : '';
 	if ($login_user == '') {
 		$action_info = '';
+	} elseif (gs_login_throttled()) {
+		$action_info = __('Zu viele Fehlversuche. Bitte versuchen Sie es in einigen Minuten erneut.');
 	} else {
+		# counts like a failed login, so that nobody can flood a
+		# mailbox or try out user names without limit
+		gs_login_throttle_count_failure();
 		$db = @gs_db_slave_connect();
 		if (!$db) $action_info = 'DB error';
 		else {
@@ -196,7 +201,7 @@ Gemeinschaft auf \"%s\"
 								
 								$action_info = $ok
 									? sPrintF(__('Pa&szlig;wort wurde an <tt>%s</tt> gesendet'), htmlEnt($u['email']))
-									: sPrintF(__('Fehler beim Senden an <tt>%s</tt>'), htmlEnt($u['email'])) .'<br />('. $mail->ErrorInfo .')';
+									: sPrintF(__('Fehler beim Senden an <tt>%s</tt>'), htmlEnt($u['email'])) .'<br />('. htmlEnt($mail->ErrorInfo) .')';
 							}
 							
 						}

@@ -64,6 +64,15 @@ if (! gs_setup_possible()) {
 #
 # start session even if GS_GUI_SESSIONS==false so $_SESSION is
 # superglobal
+session_set_cookie_params( array(
+	'lifetime' => 0,
+	'path'     => '/',
+	'secure'   => (array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] != '' && strToLower($_SERVER['HTTPS']) !== 'off'),
+	'httponly' => true,
+	'samesite' => 'Strict'  # no request from another site is part of the setup session
+) );
+ini_set('session.use_only_cookies', 1);
+ini_set('session.use_strict_mode', 1);
 session_name('gemeinschaft-setup');
 session_start();
 
@@ -168,15 +177,15 @@ $action = @$_REQUEST['action'];
 
 <?php
 
-if (! preg_match('/([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})/', $ip)) {
+if (! preg_match('/^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/D', (string)$ip)) {
 	exit(1);
 }
 
 if ($action == '') {
-	echo '<form method="post" action="', baseName($_SERVER['PHP_SELF']) ,'" style="display:inline;">' ,"\n";
-	
-	echo '<input type="hidden" name="ip"   value="', $ip ,'" />' ,"\n";
-	echo '<input type="hidden" name="type" value="', $type ,'" />' ,"\n";
+	echo '<form method="post" action="', htmlEnt(baseName($_SERVER['SCRIPT_NAME'])) ,'" style="display:inline;">' ,"\n";
+
+	echo '<input type="hidden" name="ip"   value="', htmlEnt($ip) ,'" />' ,"\n";
+	echo '<input type="hidden" name="type" value="', htmlEnt((string)$type) ,'" />' ,"\n";
 	
 	echo '<input type="hidden" name="action" value="takeover" />' ,"\n";
 	echo '<input type="submit" value="', __('&Uuml;bernehmen') ,'" />' ,"\n";

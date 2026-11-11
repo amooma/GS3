@@ -70,6 +70,15 @@ if (! gs_setup_possible()) {
 #
 # start session even if GS_GUI_SESSIONS==false so $_SESSION is
 # superglobal
+session_set_cookie_params( array(
+	'lifetime' => 0,
+	'path'     => '/',
+	'secure'   => (array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] != '' && strToLower($_SERVER['HTTPS']) !== 'off'),
+	'httponly' => true,
+	'samesite' => 'Strict'  # no request from another site is part of the setup session
+) );
+ini_set('session.use_only_cookies', 1);
+ini_set('session.use_strict_mode', 1);
 session_name('gemeinschaft-setup');
 session_start();
 
@@ -119,7 +128,7 @@ function gs_setup_auth_by_pwd()
 	$pwd_entered = trim(@$_REQUEST['login_pwd']);
 	if ($pwd_entered=='') return false;
 	
-	if ($pwd_entered === $keyval_setup_pwd)
+	if (hash_equals((string)$keyval_setup_pwd, $pwd_entered))
 		return true;
 	return false;
 }
@@ -137,6 +146,7 @@ if (! @$_SESSION['login_ok']) {
 			$login_errmsg = __('Benutzername/Pa&szlig;wort falsch.');
 		}
 		else {
+			@session_regenerate_id(true);
 			$_SESSION['login_ok'] = true;
 		}
 	}

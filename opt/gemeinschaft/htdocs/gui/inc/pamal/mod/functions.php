@@ -33,7 +33,7 @@ function _getUser_gemeinschaft()
 	$user_entered = strToLower(trim( @$_REQUEST['login_user'] ));
 	$pwd_entered  = @$_REQUEST['login_pwd' ]  ;
 	
-	if ($user_entered=='' || $pwd_entered=='')
+	if ($user_entered=='' || ! is_string($pwd_entered) || $pwd_entered=='')
 		return false;
 	
 	if ($user_entered === 'sysadmin'
@@ -49,7 +49,7 @@ function _getUser_gemeinschaft()
 		$pin = $db->executeGetOne( 'SELECT `pin` FROM `users` WHERE `user`=\''. $db->escape($user_entered) .'\'' );
 	}
 	
-	return ($pin === $pwd_entered) ? $user_entered : false;
+	return (is_string($pin) && $pin !== '' && hash_equals($pin, $pwd_entered)) ? $user_entered : false;
 }
 
 // _getUser for LDAP Users
@@ -58,7 +58,7 @@ function _getUser_ldap()
 	$ldaps =  gs_get_conf( 'GS_LDAP_SSL' );
 	$ldapproto  = gs_get_conf( 'GS_LDAP_PROTOCOL' );
 	$ldapuser   = trim( @$_REQUEST['login_user'] );
-	$ldapdn     = gs_get_conf( 'GS_LDAP_PROP_USER' ) . '=' . $ldapuser . ',' . gs_get_conf( 'GS_LDAP_SEARCHBASE' );
+	$ldapdn     = gs_get_conf( 'GS_LDAP_PROP_USER' ) . '=' . ldap_escape( $ldapuser, '', LDAP_ESCAPE_DN ) . ',' . gs_get_conf( 'GS_LDAP_SEARCHBASE' );
 	$ldappass   =  @$_REQUEST['login_pwd'];
 	$ldaphost = gs_get_conf( 'GS_LDAP_HOST' );
 	$ldapport = gs_get_conf( 'GS_LDAP_PORT');
@@ -112,7 +112,7 @@ function _searchUser_ldap()
 	$ldapuser   = trim( @$_REQUEST['login_user'] );
 	$ldapbasedn     =  gs_get_conf( 'GS_LDAP_SEARCHBASE' );
 	$ldaphost = gs_get_conf( 'GS_LDAP_HOST' );
-	$ldapfilter = gs_get_conf( 'GS_LDAP_PROP_USER' ) . '=' . $ldapuser;
+	$ldapfilter = gs_get_conf( 'GS_LDAP_PROP_USER' ) . '=' . ldap_escape( $ldapuser, '', LDAP_ESCAPE_FILTER );
 	$ldapport = gs_get_conf( 'GS_LDAP_PORT');
 	if ( $ldapport < 1) {
 		if ( $ldaps == true) {

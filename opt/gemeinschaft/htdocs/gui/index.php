@@ -176,9 +176,9 @@ else
 # get section & module
 #
 if (array_key_exists('s', $_REQUEST)) {
-	$SECTION = $_REQUEST['s'];
+	$SECTION = is_string($_REQUEST['s']) ? $_REQUEST['s'] : '';
 	if ($SECTION != '') {
-		$MODULE  = array_key_exists('m', $_REQUEST) ? $_REQUEST['m'] : '';
+		$MODULE  = (array_key_exists('m', $_REQUEST) && is_string($_REQUEST['m'])) ? $_REQUEST['m'] : '';
 	} else {
 		$SECTION = 'home';
 		$MODULE  = '';
@@ -189,7 +189,7 @@ if (array_key_exists('s', $_REQUEST)) {
 }
 if (preg_match('/[^a-z0-9\\-_]/', $SECTION.$MODULE)) {
 	//_not_found();
-	$dispatcher_errors_html[] = sPrintF(htmlEnt(__("Ung\xC3\xBCltiges Modul %s")), '<q><tt>'.$SECTION.'/'.$MODULE.'</tt></q>');
+	$dispatcher_errors_html[] = sPrintF(htmlEnt(__("Ung\xC3\xBCltiges Modul %s")), '<q><tt>'.htmlEnt($SECTION.'/'.$MODULE).'</tt></q>');
 	if (! headers_sent()) {
 		@header( 'HTTP/1.0 404 Not Found', true, 404 );
 		@header( 'Status: 404 Not Found' , true, 404 );
@@ -198,8 +198,12 @@ if (preg_match('/[^a-z0-9\\-_]/', $SECTION.$MODULE)) {
 	$MODULE  = '';
 }
 if ($is_login) {  # set in inc/session.php
+	# only go back to a page of this GUI, never to another site
 	if (array_key_exists('login_request_uri', $_REQUEST)  # set in mod/login_login.php
-	&&  $_REQUEST['login_request_uri'] != '') {
+	&&  is_string($_REQUEST['login_request_uri'])
+	&&  ! preg_match('/[\x00-\x20\\\\]/', $_REQUEST['login_request_uri'])
+	&&  ($own_url = http_get_request_url( false )) != false
+	&&  strPos($_REQUEST['login_request_uri'], $own_url . GS_URL_PATH) === 0) {
 		if (http_redirect_temporarily( $_REQUEST['login_request_uri'], false, true )) {
 			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' ,"\n";
 			echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de">' ,"\n";
@@ -409,7 +413,7 @@ if  ((( array_key_exists('id', $MODULES[$SECTION]))
 	# module/section requires admin permissions
 	if (@$_SESSION['login_ok']) {
 		//_not_allowed( 'You are not an admin.' );
-		$dispatcher_errors_html[] = sPrintF(htmlEnt(__("Sie (%s) haben keine Admin-Rechte.")), @$_SESSION['sudo_user']['name']);
+		$dispatcher_errors_html[] = sPrintF(htmlEnt(__("Sie (%s) haben keine Admin-Rechte.")), htmlEnt(@$_SESSION['sudo_user']['name']));
 		if (! headers_sent()) {
 			@header( 'HTTP/1.0 403 Forbidden', true, 403 );
 			@header( 'Status: 403 Forbidden' , true, 403 );
@@ -463,11 +467,11 @@ function gs_url( $sect='', $mod='', $sudo_user=null, $argstr='' )
 		return GS_URL_PATH
 			.'?s='.$sect
 			. ($mod ? '&amp;m='.$mod : '')
-			. ($sudo_user ? '&amp;sudo='.$sudo_user : '')
+			. ($sudo_user ? '&amp;sudo='.rawUrlEncode($sudo_user) : '')
 			. ($argstr ? '&amp;'.$argstr : '');
 	} else {
 		return GS_URL_PATH
-			. ($sudo_user ? $sudo_user : 'my') .'/'
+			. ($sudo_user ? rawUrlEncode($sudo_user) : 'my') .'/'
 			. ($sect ? $sect.'/'. ($mod ? $mod.'/' : '') : '')
 			. ($argstr ? '?'.$argstr : '');
 	}
@@ -938,7 +942,7 @@ else {
 		echo 'Error.';
 	} else {
 		echo '<iframe id="boi-content" src="';
-		echo $reverse_proxy;
+		echo htmlEnt($reverse_proxy);
 		unset($reverse_proxy);
 		
 		/*
@@ -946,7 +950,7 @@ else {
 		echo _gs_boi_ssl_is_possible($_SESSION['sudo_user']['boi_host']) ? 'https':'http';
 		*/
 		echo 'http';
-		echo '/', $_SESSION['sudo_user']['boi_host'];
+		echo '/', htmlEnt($_SESSION['sudo_user']['boi_host']);
 		echo htmlEnt($MODULES[$SECTION]['sub'][$MODULE]['boi_url']);
 		
 		echo (strPos($MODULES[$SECTION]['sub'][$MODULE]['boi_url'], '?') === false)

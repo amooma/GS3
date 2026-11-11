@@ -44,7 +44,7 @@ class PAMAL_auth_gemeinschaft extends PAMAL_auth
 		$user_entered = strToLower(trim( @$_REQUEST['login_user'] ));
 		$pwd_entered  = @$_REQUEST['login_pwd' ]  ;
 		
-		if ($user_entered=='' || $pwd_entered=='')
+		if ($user_entered=='' || ! is_string($pwd_entered) || $pwd_entered=='')
 			return false;
 		
 		if ($user_entered === 'sysadmin'
@@ -60,7 +60,7 @@ class PAMAL_auth_gemeinschaft extends PAMAL_auth
 			$pin = $db->executeGetOne( 'SELECT `pin` FROM `users` WHERE `user`=\''. $db->escape($user_entered) .'\'' );
 		}
 		
-		return ($pin === $pwd_entered) ? $user_entered : false;
+		return (is_string($pin) && $pin !== '' && hash_equals($pin, $pwd_entered)) ? $user_entered : false;
 	}
 }
 
