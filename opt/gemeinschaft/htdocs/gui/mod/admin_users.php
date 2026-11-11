@@ -475,11 +475,11 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	<thead>
 	<tr>
 		<th style="width: 70px;"><?php echo '<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;sort=user&amp;sortorder=' .$sortarray['user']), '">', __('User'), '</a>'; ?></th>
-		<th style="width:180px;"><?php echo '<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;sort=name&amp;sortorder=' .$sortarray['name']), '">',__('Nachname') ,', ', __('Vorname'); ?></th>
-		<th style="width: 60px;"><?php echo '<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;sort=ext&amp;sortorder=' .$sortarray['ext']), '">',__('Nst.' ); ?></th>
+		<th style="width:180px;"><?php echo '<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;sort=name&amp;sortorder=' .$sortarray['name']), '">',__('Nachname') ,', ', __('Vorname'), '</a>'; ?></th>
+		<th style="width: 60px;"><?php echo '<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;sort=ext&amp;sortorder=' .$sortarray['ext']), '">',__('Nst.' ), '</a>'; ?></th>
 		<th style="width: 55px;"><?php echo __('PIN'      ); ?></th>
-		<th style="width:165px;"><?php echo '<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;sort=email&amp;sortorder=' .$sortarray['email']), '">',__('E-Mail'   ); ?></th>
-		<th style="width: 42px;"><?php echo '<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;sort=host&amp;sortorder=' .$sortarray['host']), '">',__('Host'     ); ?></th>
+		<th style="width:165px;"><?php echo '<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;sort=email&amp;sortorder=' .$sortarray['email']), '">',__('E-Mail'   ), '</a>'; ?></th>
+		<th style="width: 42px;"><?php echo '<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;sort=host&amp;sortorder=' .$sortarray['host']), '">',__('Host'     ), '</a>'; ?></th>
 		<th style="width: 85px;"><?php echo __('Status'   ); ?></th>
 		<th style="width: 55px;">&nbsp;</th>
 	</tr>
@@ -959,11 +959,6 @@ echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
        			 echo '<td class="transp xs gray"><code>canreinvite = </code><code>yes</code> | <code>no</code></td>',"\n";
 			 echo '</tr>',"\n";
 		?>
-		</td>
-		<td class="transp xs gray">
-			&nbsp;
-		</td>
-	</tr>
 	<tr>
 		<th><?php echo __('E-Mail'); ?>:</th>
 		<td>
@@ -1400,7 +1395,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 	echo '<th style="width:348px;">', __('Warteschlange'), '</th>';
 	echo '<th style="width:58px;">', __('Skill'), '</th>';
 	echo '<th style="width:45px;"></th>';
-	echo '</thead><tbody>';
+	echo '</tr></thead><tbody>';
 
 	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 	echo gs_form_hidden($SECTION, $MODULE);

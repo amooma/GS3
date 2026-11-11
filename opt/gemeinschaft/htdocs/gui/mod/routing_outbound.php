@@ -311,7 +311,7 @@ while ($route = $rs->fetchRow()) {
 	$mt = str_pad($mt, 2, '0', STR_PAD_LEFT);
 	if ($ht.':'.$mt < $hf.':'.$mf) {
 		$ht = $hf;
-		$hm = $mf;
+		$mt = $mf;
 	}
 	echo '<span class="nobr">';
 	echo '<input type="text" name="r_',$id,'_h_to_h" value="', $ht, '" size="2" maxlength="2" class="r" />:';
@@ -435,7 +435,6 @@ foreach ($groups as $node) {
 	echo '</option>' ,"\n";
 }
 echo '</select><br />', "\n";
-echo '</td>', "\n";
 echo '</td>', "\n";
 
 echo '<td rowspan="2">';

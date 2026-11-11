@@ -212,16 +212,16 @@ Gemeinschaft auf \"%s\"
 		}
 	}
 ?>
-<div style="text-align:center; width:auto; margin:0 140px 0 0;" />
+<div style="text-align:center; width:auto; margin:0 140px 0 0;">
 <span style="color:#e00;"><?php echo (@$action_info != '') ? $action_info : '&nbsp;'; ?></span>
-<div style="border:1px solid #ddd; text-align:left; width:200px; margin:0 auto; background:#eee; padding:20px 25px;" />
+<div style="border:1px solid #ddd; text-align:left; width:200px; margin:0 auto; background:#eee; padding:20px 25px;">
 <form method="get" action="<?php echo GS_URL_PATH; ?>">
 <input type="hidden" name="s" value="home" />
 <input type="hidden" name="m" value="home" />
 <input type="hidden" name="login_action" value="forgotpwd" />
 
 <label for="ipt-login_user"><?php echo __('Benutzername'); ?>:</label><br />
-<input name="login_user" id="ipt-login_user" type="text" size="15" maxlength="20" value="<?php echo @$_REQUEST['login_user']; ?>" style="width:150px; font-size:1.2em;" /><br />
+<input name="login_user" id="ipt-login_user" type="text" size="15" maxlength="20" value="<?php echo htmlEnt(@$_REQUEST['login_user']); ?>" style="width:150px; font-size:1.2em;" /><br />
 <script type="text/javascript">/*<![CDATA[*/ try{ document.getElementById('ipt-login_user').focus(); }catch(e){} /*]]>*/</script>
 
 <br />
@@ -258,7 +258,7 @@ else {
 	<p class="r" style="margin:0; padding:0.4em 0;"><?php echo sPrintF(htmlEnt(__("Mailinglisten und andere Hilfen zu Gemeinschaft finden Sie online unter %s")),
 		'<a class="nobr" target="_blank" href="'.'http://www.amooma.de/gemeinschaft/'.'">'. 'http://www.amooma.de/gemeinschaft/' .'</a>' ); ?></p>
 	<p class="r" style="margin:0; padding:0.4em 0;"><?php echo htmlEnt(__("Danke dass Sie sich f\xC3\xBCr Gemeinschaft entschieden haben.")); ?><br />
-	<?php echo sPrintF(htmlEnt(__("-- Ihr %s-Team")), '<span style="text-transform:uppercase;">'.'Amooma'.'</span>'); ?><br />
+	<?php echo sPrintF(htmlEnt(__("-- Ihr %s-Team")), '<span style="text-transform:uppercase;">'.'Amooma'.'</span>'); ?></p>
 </div>
 <?php
 		$focus_field = false;

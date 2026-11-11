@@ -69,11 +69,11 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user='' )
 {
 	global $SECTION, $MODULE, $_SESSION;
 	if (! $sudo_user) $sudo_user = @$_SESSION['sudo_user']['name'];
-	$ret = '<input type="hidden" name="s" value="'. $sect .'" />';
+	$ret = '<input type="hidden" name="s" value="'. htmlEnt($sect) .'" />';
 	if ($mod)
-		$ret.= '<input type="hidden" name="m" value="'. $mod .'" />';
+		$ret.= '<input type="hidden" name="m" value="'. htmlEnt($mod) .'" />';
 	if ($sudo_user)
-		$ret.= '<input type="hidden" name="sudo" value="'. $sudo_user .'" />';
+		$ret.= '<input type="hidden" name="sudo" value="'. htmlEnt($sudo_user) .'" />';
 	return $ret ."\n";
 }
 

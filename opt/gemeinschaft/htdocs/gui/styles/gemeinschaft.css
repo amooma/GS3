@@ -13,7 +13,7 @@ textarea {
 	border-style: solid;
 	border-color: #666 #bbb #bbb #777;
 	padding: 2px 3px;
-	-moz-border-radius: 3px;
+	border-radius: 3px;
 }
 input[type="text"]:focus,
 input[type="password"]:focus,
@@ -21,8 +21,7 @@ input[type="file"]:focus,
 textarea:focus {
 	border-color: #33e #99f #99f #33e;
 	outline: 2px solid #bbf;
-	-moz-outline-radius: 5px;
-	-moz-outline-offset: 0;
+	outline-offset: 0;
 }
 
 body {

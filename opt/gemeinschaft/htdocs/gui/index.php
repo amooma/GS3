@@ -477,11 +477,11 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 {
 	global $SECTION, $MODULE, $_SESSION;
 	if (! $sudo_user) $sudo_user = @$_SESSION['sudo_user']['name'];
-	$ret = '<input type="hidden" name="s" value="'. $sect .'" />';
+	$ret = '<input type="hidden" name="s" value="'. htmlEnt($sect) .'" />';
 	if ($mod)
-		$ret.= '<input type="hidden" name="m" value="'. $mod .'" />';
+		$ret.= '<input type="hidden" name="m" value="'. htmlEnt($mod) .'" />';
 	if ($sudo_user)
-		$ret.= '<input type="hidden" name="sudo" value="'. $sudo_user .'" />';
+		$ret.= '<input type="hidden" name="sudo" value="'. htmlEnt($sudo_user) .'" />';
 	return $ret ."\n";
 }
 
@@ -736,12 +736,12 @@ if (gs_get_conf('GS_BOI_ENABLED') && $boi_menu_error_msg !== false) {
 		echo '<form id="sudo-form" method="get" action="', GS_URL_PATH ,'" enctype="application/x-www-form-urlencoded"';
 		if (gs_get_conf('GS_BOI_ENABLED')) echo ' class="with-boi"';
 		echo '>' ,"\n";
-		echo '<input type="hidden" name="s" value="', $SECTION ,'" />' ,"\n";
-		echo '<input type="hidden" name="m" value="', $MODULE ,'" />' ,"\n";
+		echo '<input type="hidden" name="s" value="', htmlEnt($SECTION) ,'" />' ,"\n";
+		echo '<input type="hidden" name="m" value="', htmlEnt($MODULE) ,'" />' ,"\n";
 		if (! gs_get_conf('GS_BOI_ENABLED')) {
 			
 			echo __('Benutzer wechseln') ,': ';
-			echo '<input type="text" size="15" maxlength="30" id="sudo-user" name="sudo" value="', @$_SESSION['sudo_user']['name'] ,'" tabindex="100" />' ,"\n";
+			echo '<input type="text" size="15" maxlength="30" id="sudo-user" name="sudo" value="', htmlEnt(@$_SESSION['sudo_user']['name']) ,'" tabindex="100" />' ,"\n";
 			
 		} else {
 			
@@ -751,7 +751,7 @@ if (gs_get_conf('GS_BOI_ENABLED') && $boi_menu_error_msg !== false) {
 			
 			echo '<div class="nobr fr">' ,"\n";
 			echo ' &nbsp;&nbsp; ', __('Benutzer') ,': ';
-			echo '<input type="text" size="10" maxlength="30" id="sudo-user" name="sudo" value="', @$_SESSION['sudo_user']['name'] ,'" tabindex="102" />' ,"\n";
+			echo '<input type="text" size="10" maxlength="30" id="sudo-user" name="sudo" value="', htmlEnt(@$_SESSION['sudo_user']['name']) ,'" tabindex="102" />' ,"\n";
 			echo '</div>' ,"\n";
 			
 			$roles = array();

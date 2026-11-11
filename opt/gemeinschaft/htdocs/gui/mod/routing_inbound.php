@@ -305,7 +305,7 @@ ORDER BY `ord`'
 		$mt = str_pad($mt, 2, '0', STR_PAD_LEFT);
 		if ($ht.':'.$mt < $hf.':'.$mf) {
 			$ht = $hf;
-			$hm = $mf;
+			$mt = $mf;
 		}
 		echo '<span class="nobr">';
 		echo '<input type="text" name="r_',$id,'_h_to_h" value="', $ht, '" size="2" maxlength="2" class="r" />:';

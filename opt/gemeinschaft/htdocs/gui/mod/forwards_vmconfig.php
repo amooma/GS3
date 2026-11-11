@@ -486,13 +486,13 @@ while ($r = $rs->fetchRow()) {
 	$i=0;
 	$rs = $DB->execute('SELECT * from `cf_timerules` WHERE `_user_id`='. $user_id.' ORDER BY `ord`');
 	while ( $route = $rs->fetchRow() ) {
-		echo '<input type="hidden" name="tr_'.$route['id'].'" value="'.$route['id'].'" />';
 		echo '<tr><td>';
+		echo '<input type="hidden" name="tr_'.$route['id'].'" value="'.$route['id'].'" />';
 		echo $route['ord'];
 		echo '</td><td>';
 		foreach ($wdaysl as $col => $v) {
 			echo '<span class="nobr"><input type="checkbox" name="'.$route['id'].'-d_',$col,'" id="ipt-'.$route['id'].'-r_d_',$col,'" value="1" ', ($route['d_'.$col] ? 'checked="checked" ' : ''), '/>';
-			echo '<label for="ipt-r_d_',$col,'">', $v, '</label></span>';
+			echo '<label for="ipt-'.$route['id'].'-r_d_',$col,'">', $v, '</label></span>';
 		}
 		echo '</td>', "\n";
 
@@ -521,7 +521,7 @@ while ($r = $rs->fetchRow()) {
 		$mt = str_pad($mt, 2, '0', STR_PAD_LEFT);
 		if ($ht.':'.$mt < $hf.':'.$mf) {
 			$ht = $hf;
-			$hm = $mf;
+			$mt = $mf;
 		}
 		echo '<span class="nobr">';
 		echo '<input type="text" name="'.$route['id'].'-r_h_to_h" value="', $ht, '" size="2" maxlength="2" class="r" />:';
@@ -530,7 +530,7 @@ while ($r = $rs->fetchRow()) {
 		echo '</td>', "\n";
 		echo '<td>'."\n";
 
-		echo '<select name="'.$route['id'].'-r_target" />', "\n";
+		echo '<select name="'.$route['id'].'-r_target">', "\n";
 		foreach ($timeruleactives as $active => $atitle) { //voicemail, Std, tmp ...
 			echo '<option value="', $active, '"';
 			if ($route['target'] === $active)
@@ -563,7 +563,7 @@ while ($r = $rs->fetchRow()) {
 	//new timerule...
 	echo '<tr><td>'._("Neu:").'</td><td>';
 	foreach ($wdaysl as $col => $v) {
-		echo '<span class="nobr"><input type="checkbox" name="new_d_',$col,'" id="ipt-r_d_',$col,'" value="1" ', ($route['d_'.$col] ? 'checked="checked" ' : ''), '/>';
+		echo '<span class="nobr"><input type="checkbox" name="new_d_',$col,'" id="ipt-r_d_',$col,'" value="1" />';
 		echo '<label for="ipt-r_d_',$col,'">', $v, '</label></span>';
 	}
 	echo '</td>', "\n";
@@ -579,7 +579,7 @@ while ($r = $rs->fetchRow()) {
 	echo '</span>';
 	echo '</td>', "\n";
 	echo '<td>'."\n";
-	echo '<select name="new_r_target" />', "\n";
+	echo '<select name="new_r_target">', "\n";
 	echo "<option value=\"\">-</option>\n";
 
 	foreach ($timeruleactives as $active => $atitle) { //voicemail, Std, tmp ...
@@ -587,12 +587,12 @@ while ($r = $rs->fetchRow()) {
 	}
 	echo '</select>';
 	echo '</td>'. "\n";
-	echo "</tbody>\n</table>";
+	echo '<td>';
 	echo '<button type="submit" name="savetimerule" value="1" title="', __('Eintrag speichern') ,'" class="plain"><img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>';
+	echo '</td>', "\n";
+	echo '</tr>', "\n";
+	echo "</tbody>\n</table>";
 ?>
-
-</tbody>
-</table>
 </form>
 
 <br />

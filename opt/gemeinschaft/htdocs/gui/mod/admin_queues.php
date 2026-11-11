@@ -519,7 +519,7 @@ WHERE
 		echo '</div>', "\n";
 		
 		echo '</td>';
-		echo '<td class="transp xs gray">',"\n";
+		echo '<td class="transp xs gray"></td>',"\n";
 		echo '</tr>',"\n";
 		
 
@@ -673,7 +673,7 @@ WHERE
 		echo '<br />',"\n";
 		
 		echo '<h3>', __('Statische'), ' ', __('Agenten'), '</h3><p>';
-		echo __('Statische'), ' ', __('Agenten'), ' ', __('sind immer an der Warteschlange angemeldet.');
+		echo __('Statische'), ' ', __('Agenten'), ' ', __('sind immer an der Warteschlange angemeldet.'), '</p>';
 		echo '<table>';
 		echo '<tr>';
 		echo '<th>', __('Verf&uuml;gbare'), ' ', __('Agenten'), '</th>';

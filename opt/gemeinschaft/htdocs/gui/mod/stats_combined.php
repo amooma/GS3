@@ -205,7 +205,6 @@ for ($i=0; $i<=24; ++$i) {
 
 echo "</select>\n";
 echo "-\n";
-echo "</select>\n";
 echo '<select name="hend" id="ipt-hend">'."\n";
 
 for ($i=0; $i<=24; ++$i) {

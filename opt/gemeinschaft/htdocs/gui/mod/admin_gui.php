@@ -87,6 +87,7 @@ if (($action == 'save') && ($group_id > 0)) {
 if (($action == 'edit') && ($group_id > 0)) {
 	$group_members = gs_group_members_get(Array($group_id));
 ?>
+<form method="post" action="<?php echo GS_URL_PATH; ?>">
 <table cellspacing="1">
 <thead>
 <tr>
@@ -96,9 +97,8 @@ if (($action == 'edit') && ($group_id > 0)) {
 </tr>
 </thead>
 <tbody>
-<form>
 <?php
-	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
+	echo gs_form_hidden($SECTION, $MODULE);
 	echo '<input type="hidden" name="id" value="', (int)$group_id, '" />', "\n";
 	echo '<input type="hidden" name="action" value="save" />', "\n";
 	echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
@@ -111,7 +111,7 @@ if (($action == 'edit') && ($group_id > 0)) {
 		echo '<td>',$section['title'],'</td>' ,"\n";
 		echo '<td></td>',"\n";
 		echo '<td>';
-		echo '<input type="checkbox" ',(in_array($section['id'],$group_members) ? ' checked="yes" ' : ''),'name="m',$section['id'],'" value="1"  />';
+		echo '<input type="checkbox" ',(in_array($section['id'],$group_members) ? ' checked="checked" ' : ''),'name="m',$section['id'],'" value="1"  />';
 		echo '</td>',"\n";
 		echo '</tr>' ,"\n";
 		
@@ -121,23 +121,23 @@ if (($action == 'edit') && ($group_id > 0)) {
 			echo '<td></td>',"\n";
 			echo '<td>',$module['title'],'</td>' ,"\n";
 			echo '<td>';
-			echo '<input type="checkbox" ',(in_array($module['id'],$group_members) ? ' checked="yes" ' : ''),'name="m',$module['id'],'" value="1"  />';
+			echo '<input type="checkbox" ',(in_array($module['id'],$group_members) ? ' checked="checked" ' : ''),'name="m',$module['id'],'" value="1"  />';
 			echo '</td>',"\n";
 			echo '</tr>' ,"\n";
 		}
 
 	}
 	echo '<tr>', "\n";
-	echo '<td colspan="4" class="transp">&nbsp;</td>', "\n";
+	echo '<td colspan="2" class="transp">&nbsp;</td>', "\n";
 	echo '<td class="r transp">';
 	echo '<input type="submit" value="', __('Speichern'), '" />';
 	echo '</td>', "\n";
 	echo '</tr>', "\n";
 
 ?>
-</form>
 </tbody>
 </table>
+</form>
 
 <?php
 }

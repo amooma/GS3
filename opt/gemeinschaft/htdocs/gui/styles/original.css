@@ -142,10 +142,6 @@ q:after  { content: close-quote; }
 .r {text-align: right;}
 .c {text-align: center;}
 
-.t {text-align: top;}
-.m {text-align: middle;}
-.b {text-align: bottom;}
-
 .m,
 tr.m td,
 tr.m th {
@@ -373,7 +369,7 @@ h4 a:hover {
 }
 
 h1 {
-	font-family: "Trebuchet MS", Arial, Helvetica, Geneva, Verdana, sans-serif;;
+	font-family: "Trebuchet MS", Arial, Helvetica, Geneva, Verdana, sans-serif;
 	font-weight: bold;
 	font-size: 2em;
 	padding: 15px 0;
@@ -696,7 +692,7 @@ tr.odd .transp {
 	padding: 5px;
 	text-align: center;
 	background-color: #fff;
-	-moz-border-radius: 5px;
+	border-radius: 5px;
 }
 .successbox {
 	border: 2px solid #0c0;
@@ -748,7 +744,6 @@ tr.odd .transp {
 	min-height: 100%;
 	width: 100%;
 	background: #fff;
-	-moz-opacity: .75;
 	opacity: .75;
 	z-index: 100;
 }
@@ -813,13 +808,13 @@ th.extmonhd {
 
 td.extmonhd {
 	text-align: right;
-	font-family: Verdana;
+	font-family: Verdana, sans-serif;
 }
 
 td.extmonhdcalls {
 	width: 2%;
 	text-align: right;
-	font-family: Verdana;
+	font-family: Verdana, sans-serif;
 	font-weight: bold;
 	font-size: 16px;
 }

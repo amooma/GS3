@@ -650,7 +650,6 @@ echo "<tr>\n";
 echo "\t<th>". __('Audiodatei') ."</th>\n";
 echo "\t<th>". __('Ihre Durchwahl') ."</th>\n";
 echo "\t<th>&nbsp;</th>\n";
-echo "\t</th>\n";
 echo "</tr>\n";
 echo "</thead>\n";
 
@@ -722,7 +721,8 @@ echo "</button>";
 
 echo "</td>\n";
 echo "</tr>\n";
-echo "</table><br>\n";
+echo "</tbody>\n";
+echo "</table><br />\n";
 echo "</form>\n";
 
 //--- ) form to record by phone
@@ -763,7 +763,8 @@ echo "</button>";
 
 echo "</td>\n";
 echo "</tr>\n";
-echo "</table><br>\n";
+echo "</tbody>\n";
+echo "</table><br />\n";
 echo "</form>\n";
 
 //--- ) form to record by phone
