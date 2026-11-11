@@ -2,6 +2,74 @@ h1. Asterisk Version
 
 Gemeinschaft in der Version 3 ist die ältere Software mit einem Asterisk-Kern. Die aktuellere Version von Gemeinschaft hat Freeswitch als Kern. Weitere Informationen dazu finden Sie auf "https://www.alternative-solution.de/gs3":https://www.alternative-solution.de/gs3
 
+h1. Gemeinschaft 3.2 auf Ubuntu 26.04 mit Asterisk 22
+
+Dieser Branch (@3.2_ubuntu_26.04_asterisk22@) bringt Gemeinschaft 3.2 von Asterisk 1.8 auf die Pakete der Distribution.
+
+h2. Basis-System
+
+* Ubuntu Server 26.04 LTS (amd64). @install.sh@ bricht auf jedem anderen System ab.
+* Alle Komponenten kommen als Pakete aus Ubuntu, es wird nichts selbst kompiliert:
+** Asterisk 22.5.2 mit PJSIP. Telefone und Gateways sind PJSIP-Endpunkte; die Telefone liest Asterisk per ODBC über Views aus der Datenbank.
+** MariaDB 11.8, angebunden über ODBC (@odbc-mariadb@). MySQL wird nicht mehr verwendet.
+** PHP 8.5 mit Apache 2.4.
+** HylaFAX und @iaxmodem@ für Fax.
+* Ein einzelner Server, kein Mehr-Knoten-Betrieb.
+* Konferenzen laufen über ConfBridge statt MeetMe. Der erste Teilnehmer kann wie bisher eine PIN festlegen.
+* ISDN- und Analogkarten (DAHDI, mISDN, CAPI) werden nicht mehr unterstützt. Externe Anschlüsse laufen über SIP-Gateways oder SIP-Trunks.
+* Zeit: Das System, Asterisk, MariaDB und die CDRs laufen auf UTC. Alles, was Benutzer sehen oder eingeben (GUI, Statistiken, Weckruf, Zeitansagen, Faxkopfzeile), nutzt @$TIMEZONE@ aus @/etc/gemeinschaft/gemeinschaft.php@ (Standard: Europe/Berlin). Wer die Zeitzone ändert, muss auch @tz@ in @voicemail.conf@ und @TZ@ in @/etc/systemd/system/faxq.service.d/gemeinschaft.conf@ anpassen.
+* Automatische Updates starten Asterisk, MariaDB, HylaFAX und iaxmodem nicht neu, weil dabei alle Gespräche abbrechen. Diese Pakete und Neustarts nach Bibliotheks-Updates sind von Hand in einem Wartungsfenster zu erledigen; @needrestart -r l@ zeigt, welche Dienste einen Neustart brauchen.
+
+h2. Neuinstallation
+
+# Ubuntu Server 26.04 LTS minimal installieren, mit fester IP-Adresse und Zugang als root.
+# @install.sh@ aus diesem Branch auf den Server kopieren und als root starten. Solange der Branch nicht der Standard ist, muss er angegeben werden:
+<pre>GEMEINSCHAFT_VERS=3.2_ubuntu_26.04_asterisk22 bash install.sh</pre>
+Ein anderes Repository (z.B. ein lokaler Klon) lässt sich mit @GEMEINSCHAFT_CLONE_URL_DIR@ angeben.
+# @install.sh@ installiert die Pakete, klont Gemeinschaft nach @/opt/gemeinschaft-source@, legt die Datenbank in MariaDB an und richtet Apache, ODBC, Asterisk, HylaFAX, die Sprachansagen, die Cron-Jobs und die systemd-Einstellungen ein. Am Ende zeigt es den Admin-Zugang (Name und PIN) für die GUI unter @http://<IP>/gemeinschaft/@ sowie zwei SIP-Konten für die ersten Telefone.
+# In @/etc/gemeinschaft/gemeinschaft.php@ die eigenen Einstellungen prüfen, vor allem die Zugangsdaten für das Provisioning der Telefone und @$TIMEZONE@.
+
+h2. Umstieg von einem bestehenden System mit Asterisk 1.8
+
+Der Umstieg ist ein eigener, manueller Schritt und nicht Teil von @install.sh@: Auf einem neu installierten Server übernimmt @misc/asterisk-migration/migrate-to-asterisk22.sh@ die Daten des alten Systems (per SSH, nur lesend). Die Daten des alten Systems werden nie verändert, ein Zurück auf das alte System bleibt also möglich. Übernommen werden die Datenbank einschließlich aller CDRs und des @queue_log@, Voicemails, Ansagen, Klingeltöne und die HylaFAX-Warteschlangen. Liegt die Datenbank auf einem gemeinsamen Server, kann die alte Datenbank umbenannt werden, ohne ihre Daten anzufassen. Nach erfolgreichem Umstieg wird die IP-Adresse des alten Servers übernommen. Die Befehle @check@, @run@, @verify@, @rename-old@ und @undo-rename@ und ihre Optionen beschreibt der Kommentar am Anfang des Skripts.
+
+h2. Durchgeführte Tests
+
+Automatisch auf einer Test-VM (Neuinstallation von Ubuntu 26.04, Test-Telefone als SIP-Clients):
+
+* Grundfunktionen, 25 von 25 bestanden, mit denselben Szenarien auf Asterisk 1.8 als Vergleich:
+** Registrierung der Telefone, Abonnements für BLF und MWI
+** internes Gespräch mit Audio und Auflegen, besetzt, Rufumleitung, Anklopfen aus
+** Rufannahme (Pickup), Weiterleitung (Blind Transfer)
+** Warteschlange: Anruf wird an ein Mitglied verteilt
+** Konferenz: erster Teilnehmer setzt die PIN, falsche PIN abgewiesen, drei falsche PINs legen auf, Raum wird nach dem letzten Teilnehmer freigegeben, neue PIN danach
+** Voicemail: Umleitung auf die Mailbox, Nachricht gespeichert, MWI-NOTIFY ans Telefon
+** CDRs und @queue_log@ gleich wie unter Asterisk 1.8 (eine CDR pro Gespräch)
+* Provisioning und Dienste, 10 von 11 (der eine Fehlschlag lag an einer falschen URL im Test):
+** Resync- und Reboot-NOTIFY aus der GUI, Login und Logout in Warteschlangen, Rückruf bei besetzt (Call Completion), Reload-Skript
+* Status-Dienste, 11 von 11: @ast_extstated@, Silverbullet mit AMI-Ereignissen (Gespräche, Warteschlangen)
+* SIP-Gateway, 16 von 16: Registrierung mit Digest-Anmeldung, abgehendes Gespräch mit Rufnummer und Absenderkennung, Anrufbegrenzung pro Gateway, ankommendes Gespräch
+* Fax über @iaxmodem@ gesendet und empfangen
+* Alle Seiten der GUI aufgerufen (72 Seiten): keine PHP-Fehler
+* Neustart der VM: alle Dienste laufen, keine Fehler in den Logs
+* Umstieg mit @migrate-to-asterisk22.sh@ von einem Asterisk-1.8-System: Quelldaten unverändert, 59 von 59 Tabellen identisch übernommen, Grundfunktionen danach 25 von 25, Umbenennen der alten Datenbank und Rückgängigmachen geprüft
+
+Von Hand mit einem echten Snom D815 auf einer VirtualBox-VM:
+
+* Auto-Provisioning per Multicast, Login und Logout eines Benutzers mit Resync
+* Neustart von MariaDB: Asterisk startet mit, Telefone registrieren sich wieder
+* BLF-Lampe einer anderen Nebenstelle und Rufannahme bei blinkender Lampe
+* Voicemail: Nachricht hinterlassen, MWI-Lampe an und aus, Abhören am Telefon, Zeitansage "empfangen um" in Ortszeit
+* Gegensprechen (Intercom) mit automatischer Annahme
+* Unterschiedliche Klingeltöne für interne und externe Anrufe sowie eigene Klingeltöne (Upload als WAV und MP3)
+* Rückruf bei besetzt (Call Completion)
+* Weckruf einstellen per @*4@ und Weckruf mit Zeitansage in Ortszeit
+* Statistik-Seiten nach echten Gesprächen (CDRs, Gruppen, Warteschlangen)
+* Konferenz mit PIN, falsche PINs, Wartemusik für einen einzelnen Teilnehmer
+* Warteschlange: Login und Logout, angenommener, abgebrochener und abgewiesener Anruf, Statistik, Lampen für den Login-Status, Prioritäten (Skills) über die GUI
+
+Noch nicht getestet: Gespräche und Fax über einen echten SIP-Trunk.
+
 h1. Installationsanleitung für Gemeinschaft 3.2
 
 Eine Installationsanleitung finden Sie unter  "http://github.com/amooma/GS3/wiki/Installation":http://github.com/amooma/GS3/wiki/Installation
