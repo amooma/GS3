@@ -35,6 +35,7 @@ require_once( GS_DIR .'htdocs/gui/inc/session.php' );  //FIXME
 include_once( GS_DIR .'inc/extension-state.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
 require_once( GS_DIR .'inc/string.php' );
+require_once( GS_DIR .'inc/ext-ranges.php' );
 
 
 $remote_ip = @$_SERVER['REMOTE_ADDR'];
@@ -53,68 +54,6 @@ if (! $allowed) {
 	echo "Not allowed for $remote_ip.\nSee config.\n";
 	die();
 }
-
-
-function gs_url( $sect='', $mod='', $sudo_user='' )
-{
-	global $SECTION, $MODULE, $_SESSION;
-	if (! $sudo_user) $sudo_user = @$_SESSION['sudo_user']['name'];
-	return GS_URL_PATH
-		.'?s='. $sect
-		. ($mod ? '&amp;m='. $mod :'')
-		. ($sudo_user ? '&amp;sudo='. $sudo_user :'');
-}
-
-function gs_form_hidden( $sect='', $mod='', $sudo_user='' )
-{
-	global $SECTION, $MODULE, $_SESSION;
-	if (! $sudo_user) $sudo_user = @$_SESSION['sudo_user']['name'];
-	$ret = '<input type="hidden" name="s" value="'. htmlEnt($sect) .'" />';
-	if ($mod)
-		$ret.= '<input type="hidden" name="m" value="'. htmlEnt($mod) .'" />';
-	if ($sudo_user)
-		$ret.= '<input type="hidden" name="sudo" value="'. htmlEnt($sudo_user) .'" />';
-	return $ret ."\n";
-}
-
-function _extstate2v( $extstate )
-{
-	//static $states = array(.......);
-	$states = array(
-		AST_MGR_EXT_UNKNOWN   => array('v'=>  ('?'        ), 's'=>'?'     ),
-		AST_MGR_EXT_IDLE      => array('v'=>__('frei'     ), 's'=>'green' ),
-		AST_MGR_EXT_INUSE     => array('v'=>__('belegt'   ), 's'=>'red'   ),
-		AST_MGR_EXT_BUSY      => array('v'=>__('belegt'   ), 's'=>'red'   ),
-		AST_MGR_EXT_OFFLINE   => array('v'=>__('offline'  ), 's'=>'?'     ),
-		AST_MGR_EXT_RINGING   => array('v'=>__('klingelt' ), 's'=>'yellow'),
-		AST_MGR_EXT_RINGINUSE => array('v'=>__('anklopfen'), 's'=>'yellow'),
-		AST_MGR_EXT_ONHOLD    => array('v'=>__('halten'   ), 's'=>'red'   )
-	);
-	return array_key_exists($extstate, $states) ? $states[$extstate] : null;
-}
-
-function get_ext_ranges( $ext_ranges )
-{
-	$ext_ranges = explode(',', (string)$ext_ranges);
-	$ret = array(
-		'ranges'  => array(),
-		'singles' => array()
-	);
-	foreach ($ext_ranges as $range) {
-		$range = trim($range);
-		if (! preg_match('/^([0-9]+)(?:\s*-\s*([0-9]+))?$/S', $range, $m)) continue;
-		if (! array_key_exists(2, $m) || $m[2]===$m[1]) {
-			$ret['singles'][] = $m[1];
-		} else {
-			if ($m[1] < $m[2])
-				$ret['ranges'][] = array($m[1], $m[2]);
-			else
-				$ret['ranges'][] = array($m[2], $m[1]);
-		}
-	}
-	return $ret;
-}
-
 
 
 ?>
@@ -293,56 +232,8 @@ body {
 </style>
 <?php
 
-$ext_ranges = preg_replace('/\s+/', '', @$_REQUEST['extensions']);
-$ext_ranges = get_ext_ranges( $ext_ranges );
-
 $db = gs_db_slave_connect();
-$exts_display = array();
-if ($db) {
-	if (@is_array(@$ext_ranges['ranges'])) {
-		foreach ($ext_ranges['ranges'] as $range) {
-			$rs = $db->execute('SELECT `s`.`name` `ext`, `u`.`firstname` `fn`, `u`.`lastname` `ln` FROM `users` `u` JOIN `ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) WHERE `s`.`name`>=\''. $db->escape(@$range[0]) .'\' AND `s`.`name`<=\''. $db->escape(@$range[1]) .'\'');
-			while ($r = $rs->fetchRow()) {
-				if ((int)$r['ext'] < @$range[0]
-				||  (int)$r['ext'] > @$range[1]) continue;
-				
-				$abbr = '';
-				if ($r['fn'] != '') $abbr .= mb_subStr($r['fn'], 0, 1).'.';
-				if ($r['ln'] != '') $abbr .= mb_subStr($r['ln'], 0, 3).'.';
-				
-				//echo js_cdeq($r['ext']) ,":{fn:", js_cdeq($r['fn']) ,",ln:", js_cdeq($r['ln']) ,",abbr:", js_cdeq($abbr) ,"},\n";
-				$exts_display[$r['ext']] = array(
-					'fn'   => $r['fn'  ],
-					'ln'   => $r['ln'  ],
-					'abbr' => $abbr
-				);
-			}
-		}
-	}
-	if (@is_array(@$ext_ranges['singles'])
-	&&  count($ext_ranges['singles']) > 0) {
-		$sql_in = '';
-		$i=0;
-		foreach ($ext_ranges['singles'] as $ext) {
-			if (!($i===0)) $sql_in .= ',';
-			$sql_in .= '\''. $db->escape($ext) .'\'';
-			++$i;
-		}
-		$sql_query = 'SELECT `s`.`name` `ext`, `u`.`firstname` `fn`, `u`.`lastname` `ln` FROM `users` `u` JOIN `ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) WHERE `s`.`name` IN ('. $sql_in .') ';
-		$rs = $db->execute($sql_query);
-		while ($r = $rs->fetchRow()) {
-			$abbr = '';
-			if ($r['fn'] != '') $abbr .= mb_subStr($r['fn'], 0, 1).'.';
-			if ($r['ln'] != '') $abbr .= mb_subStr($r['ln'], 0, 3).'.';
-
-			$exts_display[$r['ext']] = array(
-				'fn'   => $r['fn'  ],
-				'ln'   => $r['ln'  ],
-				'abbr' => $abbr
-			);
-		}
-	}
-}
+$exts_display = $db ? gs_ext_ranges_users( $db, @$_REQUEST['extensions'] ) : array();
 
 kSort($exts_display, SORT_STRING);
 echo '<div class="extensions-block">', "\n";

@@ -34,6 +34,7 @@ require_once( GS_DIR .'inc/netmask.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 //set_error_handler('err_handler_die_on_err');
 require_once( GS_DIR .'inc/string.php' );
+require_once( GS_DIR .'inc/ext-ranges.php' );
 
 
 header( 'Pragma: no-cache' );
@@ -226,115 +227,10 @@ body {
 #mon-status .ok  { background:transparent; color:#0c0; padding:1px 3px; }
 
 </style>
-<script type="text/javascript">
-// <![CDATA[
 <?php
-
-# accepts strings like '200-205, 444, 555, 100-105'
-function get_ext_ranges( $ext_ranges )
-{
-	$ext_ranges = explode(',', (string)$ext_ranges);
-	$ret = array(
-		'ranges'  => array(),
-		'singles' => array()
-	);
-	foreach ($ext_ranges as $range) {
-		$range = trim($range);
-		if (! preg_match('/^([0-9]+)(?:\s*-\s*([0-9]+))?$/S', $range, $m)) continue;
-		if (! array_key_exists(2, $m) || $m[2]===$m[1]) {
-			$ret['singles'][] = $m[1];
-		} else {
-			if ($m[1] < $m[2])
-				$ret['ranges'][] = array($m[1], $m[2]);
-			else
-				$ret['ranges'][] = array($m[2], $m[1]);
-		}
-	}
-	return $ret;
-}
-
-function js_quote( $str )
-{
-	$str = str_replace(
-		array( "'"  , "\n"  ),
-		array( "\\'", '\\n' ),
-		$str
-	);
-	return '\''. $str .'\'';
-}
-
-function cdata_escape( $str )
-{
-	return str_replace(']]>', '] ] >', $str);
-}
-
-function js_cdeq( $str )
-{
-	return js_quote( cdata_escape( $str ));
-}
-
-
-
-$ext_ranges = preg_replace('/\s+/', '', @$_REQUEST['extensions']);
-//$ext_ranges = '200-205,444,555,100-95,2000-2005';
-
-$ext_ranges = get_ext_ranges( $ext_ranges );
-//echo "var gs_ext_info = {\n";
-
 $db = gs_db_slave_connect();
-$exts_display = array();
-if ($db) {
-	if (@is_array(@$ext_ranges['ranges'])) {
-		foreach ($ext_ranges['ranges'] as $range) {
-			$rs = $db->execute('SELECT `s`.`name` `ext`, `u`.`firstname` `fn`, `u`.`lastname` `ln` FROM `users` `u` JOIN `ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) WHERE `s`.`name`>=\''. $db->escape(@$range[0]) .'\' AND `s`.`name`<=\''. $db->escape(@$range[1]) .'\'');
-			while ($r = $rs->fetchRow()) {
-				if ((int)$r['ext'] < @$range[0]
-				||  (int)$r['ext'] > @$range[1]) continue;
-				
-				$abbr = '';
-				if ($r['fn'] != '') $abbr .= mb_subStr($r['fn'], 0, 1).'.';
-				if ($r['ln'] != '') $abbr .= mb_subStr($r['ln'], 0, 3).'.';
-				
-				//echo js_cdeq($r['ext']) ,":{fn:", js_cdeq($r['fn']) ,",ln:", js_cdeq($r['ln']) ,",abbr:", js_cdeq($abbr) ,"},\n";
-				$exts_display[$r['ext']] = array(
-					'fn'   => $r['fn'  ],
-					'ln'   => $r['ln'  ],
-					'abbr' => $abbr
-				);
-			}
-		}
-	}
-	if (@is_array(@$ext_ranges['singles'])
-	&&  count($ext_ranges['singles']) > 0) {
-		$sql_in = '';
-		$i=0;
-		foreach ($ext_ranges['singles'] as $ext) {
-			if (!($i===0)) $sql_in .= ',';
-			$sql_in .= '\''. $db->escape($ext) .'\'';
-			++$i;
-		}
-		$rs = $db->execute('SELECT `s`.`name` `ext`, `u`.`firstname` `fn`, `u`.`lastname` `ln` FROM `users` `u` JOIN `ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) WHERE `s`.`name` IN ('. $sql_in .')');
-		while ($r = $rs->fetchRow()) {
-			$abbr = '';
-			if ($r['fn'] != '') $abbr .= mb_subStr($r['fn'], 0, 1).'.';
-			if ($r['ln'] != '') $abbr .= mb_subStr($r['ln'], 0, 3).'.';
-			
-			//echo js_cdeq($r['ext']) ,":{fn:", js_cdeq($r['fn']) ,",ln:", js_cdeq($r['ln']) ,",abbr:", js_cdeq($abbr) ,"},\n";
-			$exts_display[$r['ext']] = array(
-				'fn'   => $r['fn'  ],
-				'ln'   => $r['ln'  ],
-				'abbr' => $abbr
-			);
-		}
-	}
-	//echo "'dummy':{}\n";
-}
-
-//echo "};\n";
-
+$exts_display = $db ? gs_ext_ranges_users( $db, @$_REQUEST['extensions'] ) : array();
 ?>
-// ]]>
-</script>
 </head>
 <body style="margin:0; padding:0.5em;">
 <iframe id="transport" src="about:blank"></iframe>

@@ -204,5 +204,22 @@ function gs_ast_extstate_try_cc( $state )
 	# in idle state
 }
 
+# Display text and colour for an AST_MGR_EXT_* state.
+function _extstate2v( $extstate )
+{
+	static $states = null;
+	if ($states === null) $states = array(
+		AST_MGR_EXT_UNKNOWN   => array('v'=>  ('?'        ), 's'=>'?'     ),
+		AST_MGR_EXT_IDLE      => array('v'=>__('frei'     ), 's'=>'green' ),
+		AST_MGR_EXT_INUSE     => array('v'=>__('belegt'   ), 's'=>'red'   ),
+		AST_MGR_EXT_BUSY      => array('v'=>__('belegt'   ), 's'=>'red'   ),
+		AST_MGR_EXT_OFFLINE   => array('v'=>__('offline'  ), 's'=>'?'     ),
+		AST_MGR_EXT_RINGING   => array('v'=>__('klingelt' ), 's'=>'yellow'),
+		AST_MGR_EXT_RINGINUSE => array('v'=>__('anklopfen'), 's'=>'yellow'),
+		AST_MGR_EXT_ONHOLD    => array('v'=>__('halten'   ), 's'=>'red'   )
+	);
+	return array_key_exists($extstate, $states) ? $states[$extstate] : null;
+}
+
 
 ?>

@@ -27,6 +27,7 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
+require_once( GS_DIR .'inc/timerules.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_queue_callforward_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_queue_callforward_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_queue_callforward_set.php' );
@@ -206,11 +207,6 @@ if ($queue_ext != '') {
 }
 
 
-
-
-
-
-
 $queues = @gs_queues_get();
 
 $user_groups  = gs_group_members_groups_get( array(@$_SESSION['sudo_user']['info']['id']), 'user');
@@ -357,27 +353,7 @@ elseif (@$_REQUEST['action']==='savetimerule') {
 			$target = preg_replace('/[^a-z0-9]-/S', '', @$_REQUEST[$trid.'-r_target']);
 
 			#save rule to Database
-			$h_from_h = (int)lTrim(@$_REQUEST[$trid.'-r_h_from_h'],' 0');
-			if ($h_from_h <  0) $h_from_h =  0;
-			elseif ($h_from_h > 23) $h_from_h = 23;
-			$h_from_h = str_pad($h_from_h, 2, '0', STR_PAD_LEFT);
-			$h_from_m = (int)lTrim(@$_REQUEST[$trid.'-r_h_from_m'],' 0');
-			if     ($h_from_m <  0) $h_from_m =  0;
-			elseif ($h_from_m > 59) $h_from_m = 59;
-			$h_from_m = str_pad($h_from_m, 2, '0', STR_PAD_LEFT);
-			$h_from = $h_from_h.':'.$h_from_m;
-
-			$h_to_h = (int)lTrim(@$_REQUEST[$trid.'-r_h_to_h'],' 0');
-			if     ($h_to_h <  0) $h_to_h =  0;
-			elseif ($h_to_h > 24) $h_to_h = 24;
-			$h_to_h = str_pad($h_to_h, 2, '0', STR_PAD_LEFT);
-			$h_to_m = (int)lTrim(@$_REQUEST[$trid.'-r_h_to_m'],' 0');
-			if ($h_to_m <  0) $h_to_m =  0;
-			elseif ($h_to_m > 59) $h_to_m = 59;
-			$h_to_m = str_pad($h_to_m, 2, '0', STR_PAD_LEFT);
-			$h_to = $h_to_h.':'.$h_to_m;
-			if ($h_to > '24:00') $h_to = '24:00';
-			if ($h_to < $h_from) $h_to = $h_from;
+			list($h_from, $h_to) = gs_timerule_times_from_request( $trid.'-r_' );
 
 			$query = 'UPDATE `queue_cf_timerules` SET 
 				`d_mo`='. ((int)(bool)@$_REQUEST[$trid.'-d_mo']) .',
@@ -405,27 +381,7 @@ elseif (@$_REQUEST['action']==='savetimerule') {
 		$target = preg_replace('/[^a-z0-9]-/S', '', @$_REQUEST['new_r_target']);
 	
 		#save rule to Database
-		$h_from_h = (int)lTrim(@$_REQUEST['new_r_h_from_h'],' 0');
-		if ($h_from_h <  0) $h_from_h =  0;
-		elseif ($h_from_h > 23) $h_from_h = 23;
-		$h_from_h = str_pad($h_from_h, 2, '0', STR_PAD_LEFT);
-		$h_from_m = (int)lTrim(@$_REQUEST['new_r_h_from_m'],' 0');
-		if     ($h_from_m <  0) $h_from_m =  0;
-		elseif ($h_from_m > 59) $h_from_m = 59;
-		$h_from_m = str_pad($h_from_m, 2, '0', STR_PAD_LEFT);
-		$h_from = $h_from_h.':'.$h_from_m;
-
-		$h_to_h = (int)lTrim(@$_REQUEST['new_r_h_to_h'],' 0');
-		if     ($h_to_h <  0) $h_to_h =  0;
-		elseif ($h_to_h > 24) $h_to_h = 24;
-		$h_to_h = str_pad($h_to_h, 2, '0', STR_PAD_LEFT);
-		$h_to_m = (int)lTrim(@$_REQUEST['new_r_h_to_m'],' 0');
-		if ($h_to_m <  0) $h_to_m =  0;
-		elseif ($h_to_m > 59) $h_to_m = 59;
-		$h_to_m = str_pad($h_to_m, 2, '0', STR_PAD_LEFT);
-		$h_to = $h_to_h.':'.$h_to_m;
-		if ($h_to > '24:00') $h_to = '24:00';
-		if ($h_to < $h_from) $h_to = $h_from;
+		list($h_from, $h_to) = gs_timerule_times_from_request( 'new_r_' );
 	
 		$query = 'INSERT INTO `queue_cf_timerules` (`_queue_id`,`ord`,`d_mo`,`d_tu`,`d_we`,`d_th`,`d_fr`,`d_sa`,`d_su`,`h_from`,`h_to`,`target`) '.
 			'VALUES('.$queue_id.','.$ord.','.
@@ -508,9 +464,6 @@ if (count($queues) <= 25) {
 <br />
 
 <?php
-
-
-
 
 
 $queue_exists = false;
@@ -633,7 +586,6 @@ if ( @$callforwards['internal']['timeout']['active'] != 'no'
 } else {
 	$timeout = 15;
 }
-
 
 
 if (is_array($warnings) && count($warnings) > 0) {
@@ -915,15 +867,7 @@ while ($r = $rs->fetchRow()) {
 </thead>
 <tbody>
 <?php
-	$lang = @$_SESSION['lang'];
-	if (! $lang)
-		$lang = gs_get_conf('GS_INTL_LANG', 'de_DE');
-	$lang = strToLower(subStr($lang,0,2));
-	$wdays = array('mo'=>'Mon', 'tu'=>'Tue', 'we'=>'Wed', 'th'=>'Thu', 'fr'=>'Fri', 'sa'=>'Sat', 'su'=>'Sun');
-	$wdaysl = array();
-	foreach ($wdays as $col => $wdca)
-		$wdaysl[$col] = mb_subStr(gs_strftime('%a', strToTime('last '.$wdca), $lang),0,1);
-	unset($wdays);
+	$wdaysl = gs_timerule_weekday_initials();
 
 
 	$i=0;
@@ -940,38 +884,8 @@ while ($r = $rs->fetchRow()) {
 		echo '</td>', "\n";
 	
 		echo '<td>';
-		$tmp = explode(':', $route['h_from']);
-		$hf = (int)lTrim(@$tmp[0], '0-');
-		if     ($hf <  0) $hf =  0;
-		elseif ($hf > 23) $hf = 23;
-		$hf = str_pad($hf, 2, '0', STR_PAD_LEFT);
-		$mf = (int)lTrim(@$tmp[1], '0-');
-		if     ($mf <  0) $mf =  0;
-		elseif ($mf > 59) $mf = 59;
-		$mf = str_pad($mf, 2, '0', STR_PAD_LEFT);
-		echo '<span class="nobr">';
-		echo '<input type="text" name="'.$route['id'].'-r_h_from_h" value="', $hf, '" size="2" maxlength="2" class="r" />:';
-		echo '<input type="text" name="'.$route['id'].'-r_h_from_m" value="', $mf, '" size="2" maxlength="2" class="r" /> -';
-		echo '</span> ', "\n";
-		$tmp = explode(':', $route['h_to']);
-		$ht = (int)lTrim(@$tmp[0], '0-');
-		if     ($ht <  0) $ht =  0;
-		elseif ($ht > 24) $ht = 24;
-		$ht = str_pad($ht, 2, '0', STR_PAD_LEFT);
-		$mt = (int)lTrim(@$tmp[1], '0-');
-		if     ($mt <  0) $mt =  0;
-		elseif ($mt > 59) $mt = 59;
-		$mt = str_pad($mt, 2, '0', STR_PAD_LEFT);
-		if ($ht.':'.$mt < $hf.':'.$mf) {
-			$ht = $hf;
-			$mt = $mf;
-		}
-
-	
-		echo '<span class="nobr">';
-		echo '<input type="text" name="'.$route['id'].'-r_h_to_h" value="', $ht, '" size="2" maxlength="2" class="r" />:';
-		echo '<input type="text" name="'.$route['id'].'-r_h_to_m" value="', $mt, '" size="2" maxlength="2" class="r" />';
-		echo '</span>';
+		list($hf, $mf, $ht, $mt) = gs_timerule_times_for_display( $route['h_from'], $route['h_to'] );
+		echo gs_timerule_times_html( $route['id'].'-r_', $hf, $mf, $ht, $mt );
 		echo '</td>', "\n";
 		echo '<td>'."\n";
 
@@ -1013,15 +927,7 @@ while ($r = $rs->fetchRow()) {
 	}
 	echo '</td>', "\n";
 	echo '<td>';
-	echo '<span class="nobr">';
-	echo '<input type="text" name="new_r_h_from_h" value="00" size="2" maxlength="2" class="r" />:';
-	echo '<input type="text" name="new_r_h_from_m" value="00" size="2" maxlength="2" class="r" /> -';
-	echo '</span> ', "\n";
-
-	echo '<span class="nobr">';
-	echo '<input type="text" name="new_r_h_to_h" value="23" size="2" maxlength="2" class="r" />:';
-	echo '<input type="text" name="new_r_h_to_m" value="59" size="2" maxlength="2" class="r" />';
-	echo '</span>';
+	echo gs_timerule_times_html( 'new_r_', '00', '00', '23', '59' );
 	echo '</td>', "\n";
 	echo '<td>'."\n";
 	echo '<select name="new_r_target">', "\n";

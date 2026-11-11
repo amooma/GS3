@@ -55,23 +55,6 @@ if (! is_array( $_SESSION['sudo_user']['keys']['snom'] )) {
 */
 
 
-function _extstate2v( $extstate )
-{
-	//static $states = array(.......);
-	$states = array(
-		AST_MGR_EXT_UNKNOWN   => array('v'=>  ('?'        ), 's'=>'?'     ),
-		AST_MGR_EXT_IDLE      => array('v'=>__('frei'     ), 's'=>'green' ),
-		AST_MGR_EXT_INUSE     => array('v'=>__('belegt'   ), 's'=>'red'   ),
-		AST_MGR_EXT_BUSY      => array('v'=>__('belegt'   ), 's'=>'red'   ),
-		AST_MGR_EXT_OFFLINE   => array('v'=>__('offline'  ), 's'=>'?'     ),
-		AST_MGR_EXT_RINGING   => array('v'=>__('klingelt' ), 's'=>'yellow'),
-		AST_MGR_EXT_RINGINUSE => array('v'=>__('anklopfen'), 's'=>'yellow'),
-		AST_MGR_EXT_ONHOLD    => array('v'=>__('halten'   ), 's'=>'red'   )
-	);
-	return array_key_exists($extstate, $states) ? $states[$extstate] : null;
-}
-
-
 $GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
 
 
