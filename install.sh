@@ -450,6 +450,34 @@ PartOf=mariadb.service
 HEREDOC
 systemctl daemon-reload
 
+# Unattended upgrades must not restart the telephony services, that
+# drops all calls. needrestart only lists them after library updates,
+# and the packages whose own scripts restart them are upgraded by hand.
+mkdir -p /etc/needrestart/conf.d
+cat <<\HEREDOC > /etc/needrestart/conf.d/gemeinschaft.conf
+# Gemeinschaft: restart these by hand in a maintenance window
+$nrconf{override_rc}->{qr(^asterisk\.service$)} = 0;
+$nrconf{override_rc}->{qr(^mariadb\.service$)} = 0;
+$nrconf{override_rc}->{qr(^gs-extstated\.service$)} = 0;
+$nrconf{override_rc}->{qr(^silverbullet\.service$)} = 0;
+$nrconf{override_rc}->{qr(^iaxmodem\.service$)} = 0;
+$nrconf{override_rc}->{qr(^hylafax\.service$)} = 0;
+$nrconf{override_rc}->{qr(^faxq\.service$)} = 0;
+$nrconf{override_rc}->{qr(^hfaxd\.service$)} = 0;
+$nrconf{override_rc}->{qr(^faxgetty-)} = 0;
+HEREDOC
+cat <<\HEREDOC > /etc/apt/apt.conf.d/51gemeinschaft-unattended-upgrades
+// Gemeinschaft: upgrading these restarts the telephony services,
+// upgrade them by hand in a maintenance window
+Unattended-Upgrade::Package-Blacklist {
+	"asterisk";
+	"mariadb-";
+	"galera-";
+	"hylafax-";
+	"iaxmodem";
+};
+HEREDOC
+
 # ODBC data source for Asterisk
 cat <<\HEREDOC > /etc/odbc.ini
 [gemeinschaft]
