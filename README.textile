@@ -7,6 +7,32 @@ h1. Gemeinschaft 3.2 auf Ubuntu 26.04 mit Asterisk 22
 
 Dieser Branch (@3.2_ubuntu_26.04_asterisk22@) bringt Gemeinschaft 3.2 von Asterisk 1.8 auf die Pakete der Distribution.
 
+h2. Sicherheit: Weboberfläche und Asterisk laufen ohne Root-Rechte
+
+*Die wichtigste Verbesserung gegenüber allen bisherigen Versionen:* Bis Gemeinschaft 3.2 durften der Webserver und Asterisk über @sudo@ jeden beliebigen Befehl als root ausführen:
+
+<pre>
+www-data  ALL=(ALL)  NOPASSWD: ALL
+asterisk  ALL=(ALL)  NOPASSWD: ALL
+</pre>
+
+Damit war jede Schwachstelle in der Weboberfläche, in den Provisioning-Seiten der Telefone, in einem AGI-Skript oder im Dialplan gleichbedeutend mit der vollständigen Übernahme des Servers. Ein Fehler in einer beliebigen PHP-Seite oder ein präparierter Anrufername reichte aus, um root zu werden.
+
+Das ist vorbei:
+
+|_. Benutzer |_. vorher |_. jetzt |
+| @asterisk@ (Dialplan, AGI-Skripte) | alles als root | *kein* @sudo@ mehr |
+| @www-data@ (GUI, Provisioning) | alles als root | nur @start-asterisk@, @vm-local-list@ und @vm-local-del@ als @asterisk@, das HylaFAX-Zugangsdatei-Skript als @uucp@, sowie @shutdown -h -P now@ und @shutdown -r now@ |
+| @uucp@ (HylaFAX) | @chgrp@ auf jede Datei als root | nur @gs-fax-chgrp@, das ausschließlich empfangene Faxe in @recvq/@ annimmt |
+
+Alles andere läuft über Dateirechte: Anrufdateien werden direkt in Asterisks Spool-Verzeichnis gelegt, die Weboberfläche nutzt das Asterisk-CLI über die Gruppe @asterisk@, und Klingeltöne, Schlüssel-Werte-Speicher und AMI-Konten liegen in Verzeichnissen, die der Webserver beschreiben darf. Die erlaubten Skripte prüfen ihre Argumente selbst.
+
+Eine Schwachstelle in der Weboberfläche kann damit zwar weiterhin Gemeinschaft-Daten ändern und Asterisk-Befehle ausführen, aber nicht mehr das System übernehmen. Die Regeln stehen in @/etc/sudoers.d/gemeinschaft-apache@ und @/etc/sudoers.d/gemeinschaft-hylafax@; @install.sh@ prüft sie mit @visudo@.
+
+Weitere Härtungen in diesem Branch: Anrufername und gewählte Ziffern gelangen nicht mehr in Shell-Befehle oder den Dial-String, die Provisioning-Seiten antworten nur noch dem Telefon des Benutzers, die GUI-Sitzungen sind gegen Cross-Site-Requests und Session-Fixation geschützt, Anmeldeversuche sind begrenzt, und SQL-Injection und XSS in der GUI und der Bibliothek sind behoben.
+
+Hinweis für mehrere Knoten und GPBX-Appliances: Die Befehle für @ssh@/@scp@ zwischen Knoten sowie Einrichtungsassistent, Upgrade und Plattenbelegung der GPBX laufen ohne die alten Regeln nicht mehr. Beides wird von diesem Branch nicht unterstützt.
+
 h2. Basis-System
 
 * Ubuntu Server 26.04 LTS (amd64). @install.sh@ bricht auf jedem anderen System ab.
