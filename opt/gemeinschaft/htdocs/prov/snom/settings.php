@@ -825,7 +825,10 @@ setting('user_server_type'        ,$i, ((_snomAppCmp($fw_vers_nrml, '7.3.2') >0)
 setting('ring_after_delay'        ,$i, ''   );
 setting('user_send_local_name'    ,$i, 'on' );  # send display name to caller
 setting('user_dtmf_info'          ,$i, 'off');
-setting('user_mailbox'            ,$i, 'mailbox');
+# MWI subscription target: PJSIP accepts only the name of the phone's own
+# AOR, i.e. the extension ("mailbox" got 404). The message key dials
+# voicemail@host on its own (dkey_retrieve).
+setting('user_mailbox'            ,$i, $user_ext);
 setting('user_dp_exp'             ,$i, ''   );  # see http://wiki.snom.com/Settings/user_dp_exp
 setting('user_dp_str'             ,$i, ''   );  # see http://wiki.snom.com/Dial_Plan
 setting('user_dp'                 ,$i, ''   );
