@@ -192,7 +192,7 @@ WHERE `id`='.$ggid
 	}
 	
 	$cmd = '/opt/gemeinschaft/sbin/start-asterisk 1>>/dev/null 2>>/dev/null';
-	@exec( 'sudo sh -c '. qsa($cmd) .' 1>>/dev/null 2>>/dev/null &' );
+	@exec( 'sudo -n -u asterisk '. $cmd .' 1>>/dev/null 2>>/dev/null &' );
 	
 	$action = 'gedit';
 }

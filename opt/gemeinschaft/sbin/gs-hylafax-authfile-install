@@ -1,0 +1,26 @@
+#!/bin/sh
+# Installs a new HylaFAX access file (hosts.hfaxd) read from stdin.
+#
+# The web GUI runs this as uucp, the owner of the HylaFAX files, via
+# sudo (the only command www-data may run as uucp, see install.sh).
+# The paths are fixed, so nothing else can be written with it.
+
+set -e
+umask 077
+
+tmp=$(mktemp)
+trap 'rm -f "$tmp"' EXIT
+cat > "$tmp"
+if [ ! -s "$tmp" ]; then
+	echo "No access file on stdin." >&2
+	exit 1
+fi
+
+for f in /var/spool/hylafax/etc/hosts.hfaxd /etc/hylafax/hosts.hfaxd; do
+	[ -d "${f%/*}" ] || continue
+	cat "$tmp" > "$f"
+	chmod 0600 "$f"
+	if [ "$(id -u)" = 0 ]; then
+		chown uucp "$f"
+	fi
+done

@@ -39,12 +39,12 @@ echo '</h2>', "\n";
 echo "<br />\n";
 
 
-@exec( 'sudo asterisk -rx \'core set verbose 1\' 1>>/dev/null 2>>/dev/null', $out, $err );
+@exec( 'asterisk -rx \'core set verbose 1\' 1>>/dev/null 2>>/dev/null', $out, $err );
 
 
 echo '<b>', 'tail -n 250 /var/log/asterisk/messages' ,'</b>' ,"\n";
 $err=0; $out=array();
-@exec( 'sudo tail -n 250 /var/log/asterisk/messages 2>>/dev/null | grep -v -i '. qsa('Empty Extension') .' 2>>/dev/null', $out, $err );
+@exec( 'tail -n 250 /var/log/asterisk/messages 2>>/dev/null | grep -v -i '. qsa('Empty Extension') .' 2>>/dev/null', $out, $err );
 if ($err !== 0) {
 	echo '-';
 	return;

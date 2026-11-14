@@ -72,7 +72,7 @@ function gs_asterisks_reload( $host_ids, $dialplan_only )
 	$uid = @ posix_geteuid();
 	$uinfo = @ posix_getPwUid($uid);
 	$uname = @ $uinfo['name'];
-	$sudo = ($uname=='root') ? '' : 'sudo ';
+	$sudo = ($uname=='root') ? '' : 'sudo -n -u asterisk ';  # start-asterisk runs as asterisk
 	
 	$ok = true;
 	foreach ($hosts as $host) {

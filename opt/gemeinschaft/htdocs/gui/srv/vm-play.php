@@ -217,7 +217,7 @@ if (! $vmmsg_is_on_this_host) {
 }
 
 $err=0; $out=array();
-@exec( 'sudo chmod a+r '. qsa($origfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
+@exec( 'chmod a+r '. qsa($origfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );  # vm-postexec already made it readable
 if ($err != 0) {
 	gs_log( GS_LOG_WARNING, 'Can\'t read \"$origfile\".' );
 	_server_error( 'Failed to convert file.' );

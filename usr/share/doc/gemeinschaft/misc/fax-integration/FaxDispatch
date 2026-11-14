@@ -12,7 +12,8 @@
 LANG=de_DE
 NOTIFY_FAXMASTER=errors
 
-EXTEN_ID=$CALLID4;
+# digits only: the value comes from the call and goes into an SQL query
+EXTEN_ID=$(printf '%s' "$CALLID4" | tr -cd '0-9');
 
 if [ -z "$EXTEN_ID" ] ; then EXTEN_ID=0;
 fi
@@ -29,7 +30,8 @@ USER_ID=`echo $SQL_RESULT | awk  '{print $3}'`;
 
 FILETYPE=pdf;
 
-/usr/bin/sudo /bin/chgrp "$USER_ID" "$SPOOL/$FILE"
+# the only command uucp may run as root (see install.sh)
+/usr/bin/sudo -n /opt/gemeinschaft/sbin/gs-fax-chgrp "$USER_ID" "$SPOOL/$FILE"
 
 
 DLOGFILE="/var/spool/hylafax/log/dispatch.log";

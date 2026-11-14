@@ -186,7 +186,8 @@ if($newaction === "byphone")
 	@fclose($cf);
 	@chmod($tmp_filename, 00666);
 
-	@exec("sudo mv ". qsa($tmp_filename) ." ". qsa($spoolfile) ." 1>>/dev/null 2>>/dev/null", $out, $err);
+	include_once( GS_DIR .'inc/callfile.php' );
+	$err = gs_callfile_move( $tmp_filename, $spoolfile );  # no sudo needed
 	if($err !== 0)
 	{
 		@unlink($tmp_filename);
@@ -227,7 +228,8 @@ if($playback)
 	@fclose($cf);
 	@chmod($tmp_filename, 00666);
 
-	@exec("sudo mv ". qsa($tmp_filename) ." ". qsa($spoolfile) ." 1>>/dev/null 2>>/dev/null", $out, $err);
+	include_once( GS_DIR .'inc/callfile.php' );
+	$err = gs_callfile_move( $tmp_filename, $spoolfile );  # no sudo needed
 	if($err !== 0)
 	{
 		@unlink($tmp_filename);

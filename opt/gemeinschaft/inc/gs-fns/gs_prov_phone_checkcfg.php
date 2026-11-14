@@ -443,7 +443,7 @@ WHERE
 function _gs_prov_phone_checkcfg_by_ext_do_snom( $ext, $reboot=true )
 {
 	$sip_notify = $reboot ? 'snom-reboot' : 'snom-check-cfg';
-	@exec( 'sudo asterisk -rx \'pjsip send notify '. $sip_notify .' endpoint '. $ext .'\' >>/dev/null 2>>/dev/null &', $out, $err );
+	@exec( 'asterisk -rx \'pjsip send notify '. $sip_notify .' endpoint '. $ext .'\' >>/dev/null 2>>/dev/null &', $out, $err );
 	
 	$hosts = @gs_hosts_get(false);
 	if (isGsError($hosts)) {
@@ -554,7 +554,7 @@ function _gs_prov_phone_checkcfg_by_ext_do_grandstream( $ext, $reboot=true )
 function _gs_prov_phone_checkcfg_by_ext_do_polycom( $ext, $reboot=true )
 {
 	$sip_notify = "polycom-check-cfg";
-	@exec( 'sudo asterisk -rx \'pjsip send notify '. $sip_notify .' endpoint '. $ext .'\' >>/dev/null 2>>/dev/null &', $out, $err );
+	@exec( 'asterisk -rx \'pjsip send notify '. $sip_notify .' endpoint '. $ext .'\' >>/dev/null 2>>/dev/null &', $out, $err );
 	
 	$hosts = @gs_hosts_get(false);
 	if (isGsError($hosts)) {

@@ -94,7 +94,7 @@ while ($queue = $rs->fetchRow()) {
 		# queue information from Realtime
 		
 		$cmd = $asterisk .' -rx \'queue show '. $queue['ext'] .'\' 2>&1';
-		$cmd = 'sudo '. $cmd;
+		# runs as root from cron, no sudo needed
 		$out = array();
 		@exec($cmd, $out, $err);
 		

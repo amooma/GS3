@@ -105,7 +105,7 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 	#
 	if ($we_are_the_webserver) {
 		# local
-		@exec( 'sudo rm -rf '. GS_DIR .'htdocs/prov/ringtones/'. $user .'-'. subStr($src,0,3) .'-* 1>>/dev/null 2>>/dev/null' );
+		@exec( 'rm -rf '. GS_DIR .'htdocs/prov/ringtones/'. $user .'-'. subStr($src,0,3) .'-* 1>>/dev/null 2>>/dev/null' );
 	} else {
 		# remotely
 		$cmd = 'rm -rf /opt/gemeinschaft/htdocs/prov/ringtones/'. $user .'-'. subStr($src,0,3) .'-* 1>>/dev/null 2>>/dev/null &';
@@ -199,7 +199,7 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 			if ($we_are_the_webserver) {
 				# local
 				//rename( $outfile, GS_DIR .'htdocs/prov/ringtones/'. $newbase );
-				@exec( 'sudo mv '. qsa($outfile) .' '. qsa( GS_DIR .'htdocs/prov/ringtones/'. $newbase ), $out, $err );
+				@exec( 'mv '. qsa($outfile) .' '. qsa( GS_DIR .'htdocs/prov/ringtones/'. $newbase ), $out, $err );
 			} else {
 				# remotely
 				@exec( 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa($outfile) .' '. qsa( 'root@'. GS_PROV_HOST .':/opt/gemeinschaft/htdocs/prov/ringtones/'. $newbase ) .' >>/dev/null 2>>/dev/null', $out, $err );

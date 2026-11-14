@@ -1,0 +1,32 @@
+#!/bin/sh
+# Gives a received fax to the group of the user it was sent to, so the
+# web GUI shows it in that user's inbox.
+#
+# Called by FaxDispatch (as uucp) via sudo, the only command uucp may
+# run as root (see install.sh). Only a numeric group and a regular file
+# directly in the HylaFAX receive queue are accepted.
+
+set -e
+gid="$1"
+file="$2"
+
+case "$gid" in
+	''|*[!0-9]*) echo "Invalid group." >&2; exit 1 ;;
+esac
+if [ "$gid" -lt 1 ]; then
+	echo "Invalid group." >&2; exit 1
+fi
+
+name="${file#/var/spool/hylafax/recvq/}"
+case "$file" in
+	/var/spool/hylafax/recvq/fax*.tif) ;;
+	*) echo "Invalid file." >&2; exit 1 ;;
+esac
+case "$name" in
+	*/*|*..*) echo "Invalid file." >&2; exit 1 ;;
+esac
+if [ ! -f "$file" ] || [ -L "$file" ]; then
+	echo "No such fax." >&2; exit 1
+fi
+
+exec chgrp -h -- "$gid" "$file"

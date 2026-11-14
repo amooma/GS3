@@ -122,7 +122,7 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 	#
 	
 	$err=0; $out=array();
-	@exec( 'sudo chmod a+r '. qsa($origfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
+	@exec( 'chmod a+r '. qsa($origfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );  # vm-postexec runs as asterisk, the owner
 	if ($err != 0) {
 		gs_log( GS_LOG_WARNING, "Can't read origfile \"$origfile\"" );
 		return false;

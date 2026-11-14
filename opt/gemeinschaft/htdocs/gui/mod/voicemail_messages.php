@@ -153,18 +153,18 @@ if (@$_REQUEST['action']==='play') {
 		if ($user_is_on_this_host) {
 			# user is on this host
 			if (file_exists( $origfile )) {
-				@exec( 'sudo rm -rf '. qsa($tmpfile) );
-				@exec( 'sudo cp '. qsa($origfile) .' '. qsa($tmpfile) .' && sudo chmod 666 '. qsa($tmpfile) );
+				@exec( 'rm -rf '. qsa($tmpfile) );
+				@exec( 'cp '. qsa($origfile) .' '. qsa($tmpfile) .' && chmod 666 '. qsa($tmpfile) );  # readable via the asterisk group
 				$msg_exists = true;
 			}
 		} else {
 			# user is not on this host
-			@exec( 'sudo rm -rf '. qsa($tmpfile) );
-			@exec( 'sudo -u root cp '. qsa($origfile) .' '. qsa($tmpfile) .' && sudo -u root chmod 666 '. qsa($tmpfile) );
+			@exec( 'rm -rf '. qsa($tmpfile) );
+			@exec( 'cp '. qsa($origfile) .' '. qsa($tmpfile) .' && chmod 666 '. qsa($tmpfile) );  # readable via the asterisk group
 			
 			$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa( $tmpfile ) .' '. qsa( 'root@'. $host['host'] .':'. $tmpfile );
 			@ exec( $cmd .' 1>>/dev/null 2>&1', $out, $err );
-			//@exec( 'sudo rm -rf '. qsa($tmpfile) );
+			//@exec( 'rm -rf '. qsa($tmpfile) );
 			$msg_exists = true;
 		}
 	}
@@ -315,7 +315,7 @@ if (@$_REQUEST['action']==='del') {
 		$err=0; $out=array();
 		if ($user_is_on_this_host) {
 			# user is on this host
-			@exec( 'sudo '. $cmd .' 2>>/dev/null', $out, $err );
+			@exec( 'sudo -n -u asterisk '. $cmd .' 2>>/dev/null', $out, $err );  # the voicemail files belong to asterisk
 		} else {
 			# user is not on this host
 			@exec( GS_DIR .'sbin/remote-exec-do '. qsa($host['host']) .' '. qsa($cmd) .' 10 2>>/dev/null', $out, $err );
@@ -333,7 +333,7 @@ $cmd = GS_DIR .'sbin/vm-local-list '. qsa( @$_SESSION['sudo_user']['info']['ext'
 $out = array();
 if ($user_is_on_this_host) {
 	# user is on this host
-	@exec( 'sudo -u root '. $cmd .' 2>>/dev/null', $out, $err );
+	@exec( 'sudo -n -u asterisk '. $cmd .' 2>>/dev/null', $out, $err );  # the voicemail files belong to asterisk
 } else {
 	# user is not on this host
 	exec( GS_DIR .'sbin/remote-exec-do '. qsa($host['host']) .' '. qsa($cmd) .' 10 2>>/dev/null', $out, $err );

@@ -229,7 +229,7 @@ if (file_exists('/proc/net/dev')) {
 #####################################################################
 echo '<h3>Asterisk version</h3>', "\n";
 $err=0; $out=array();
-@exec( 'sudo asterisk -rx \'core show version\' 2>>/dev/null', $out,
+@exec( 'asterisk -rx \'core show version\' 2>>/dev/null', $out,
 $err );
 if ($err===0) {
 	$out = trim(implode(' ', $out));

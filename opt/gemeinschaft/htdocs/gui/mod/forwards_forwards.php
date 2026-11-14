@@ -104,7 +104,8 @@ function InitHinttoggleCall() {  //FIXME  --- fix what?
 	if ($user_is_on_this_host) {
 		# the Asterisk of this user and the web server both run on this host
 		$err=0; $out=array();
-		@exec( 'sudo mv '. qsa($filename) .' '. qsa($spoolfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
+		include_once( GS_DIR .'inc/callfile.php' );
+		$err = gs_callfile_move( $filename, $spoolfile );  # no sudo needed
 		if ($err != 0) {
 			@unlink( $filename );
 			gs_log( GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. '/var/spool/asterisk/outgoing/'. baseName($filename) .'"' );

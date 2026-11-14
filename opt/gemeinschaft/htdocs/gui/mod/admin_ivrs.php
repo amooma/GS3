@@ -241,7 +241,7 @@ WHERE `id`='.$ivr_id
 		);
 	}
 	
-	@exec('sudo '. qsa(GS_DIR.'sbin/start-asterisk') .' --dialplan' .' 1>>/dev/null 2>>/dev/null &' );
+	@exec('sudo -n -u asterisk '. qsa(GS_DIR.'sbin/start-asterisk') .' --dialplan' .' 1>>/dev/null 2>>/dev/null &' );
 	
 	$action = 'edit';
 }

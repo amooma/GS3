@@ -284,10 +284,10 @@ mkdir -p /var/spool/asterisk/outgoing
 chmod a+rwx /var/spool/asterisk/outgoing
 chmod a+rwx /var/spool/asterisk/tmp
 
-# sudo permissions for Asterisk
+# Asterisk (dialplan, AGI scripts) needs no sudo: it owns its spool
+# and its files, the cron jobs run as root.
 #
-echo "asterisk  ALL=(ALL)  NOPASSWD: ALL" > /etc/sudoers.d/gemeinschaft-asterisk
-chmod 0440 /etc/sudoers.d/gemeinschaft-asterisk
+rm -f /etc/sudoers.d/gemeinschaft-asterisk
 
 
 # install lame
@@ -523,10 +523,19 @@ a2enmod headers
 
 systemctl restart apache2
 
-# sudo permissions for Apache
+# sudo permissions for Apache: only these commands. Everything else
+# the GUI and the provisioning pages do works through file permissions
+# (see "permissions for the web GUI" below) and the Asterisk CLI socket,
+# which the asterisk group may use. vm-local-del and vm-local-list
+# reduce their arguments to digits and letters.
 #
-echo "www-data  ALL=(ALL)  NOPASSWD: ALL" > /etc/sudoers.d/gemeinschaft-apache
+cat <<\HEREDOC > /etc/sudoers.d/gemeinschaft-apache
+www-data ALL=(asterisk) NOPASSWD: /opt/gemeinschaft/sbin/start-asterisk, /opt/gemeinschaft/sbin/vm-local-del, /opt/gemeinschaft/sbin/vm-local-list
+www-data ALL=(uucp) NOPASSWD: /opt/gemeinschaft/sbin/gs-hylafax-authfile-install ""
+www-data ALL=(root) NOPASSWD: /usr/sbin/shutdown -h -P now, /usr/sbin/shutdown -r now, /sbin/shutdown -h -P now, /sbin/shutdown -r now
+HEREDOC
 chmod 0440 /etc/sudoers.d/gemeinschaft-apache
+visudo -c -q -f /etc/sudoers.d/gemeinschaft-apache
 
 
 # configure Asterisk
@@ -708,6 +717,23 @@ cd /var/lib/
 ln -snf /opt/gemeinschaft-source/var/lib/gemeinschaft
 
 
+# permissions for the web GUI, which runs without root rights
+#
+# key-value store, read by Asterisk and written by the GUI
+mkdir -p /var/lib/gemeinschaft/vars
+chown -R root:asterisk /var/lib/gemeinschaft/vars
+chmod 2775 /var/lib/gemeinschaft/vars
+find /var/lib/gemeinschaft/vars -type f -exec chmod 0664 {} +
+# uploaded ringtones
+chown -R www-data:www-data /opt/gemeinschaft-local/htdocs/prov/ringtones
+# Snom language files, downloaded on demand
+chgrp www-data /opt/gemeinschaft-source/opt/gemeinschaft/htdocs/prov/snom/sw
+chmod 2775 /opt/gemeinschaft-source/opt/gemeinschaft/htdocs/prov/snom/sw
+# AMI accounts switched on and off in the GUI
+chgrp www-data /etc/gemeinschaft/asterisk/manager.conf.d-enabled
+chmod 2775 /etc/gemeinschaft/asterisk/manager.conf.d-enabled
+
+
 # gs-sip-ua-config-responder fuer Snom
 #
 if [ -e /opt/gemeinschaft-source/etc/init.d/gs-sip-ua-config-responder ]; then
@@ -834,10 +860,12 @@ if [ -e /etc/apparmor.d/gs ]; then
 	apparmor_parser -r /etc/apparmor.d/gs || true
 fi
 
-# sudo permissions for FaxDispatch
+# sudo permissions for FaxDispatch: it gives a received fax to the
+# user's group, only through this script
 #
-echo "uucp ALL = NOPASSWD: /bin/chgrp" > /etc/sudoers.d/gemeinschaft-hylafax
+echo "uucp ALL=(root) NOPASSWD: /opt/gemeinschaft/sbin/gs-fax-chgrp" > /etc/sudoers.d/gemeinschaft-hylafax
 chmod 0440 /etc/sudoers.d/gemeinschaft-hylafax
+visudo -c -q -f /etc/sudoers.d/gemeinschaft-hylafax
 
 # run HylaFax config script
 #
@@ -1013,6 +1041,8 @@ systemctl daemon-reload || true
 
 /etc/init.d/asterisk stop || true
 /opt/gemeinschaft/sbin/gs-ast-dialplan-gen
+# start-asterisk regenerates it as asterisk when the GUI reloads
+chown asterisk:asterisk /opt/gemeinschaft/etc/asterisk/extensions.ael
 
 # start services
 #

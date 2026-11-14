@@ -77,7 +77,7 @@ if (array_key_exists('action', $_REQUEST) && $_REQUEST['action'] === 'save') {
 				if ($enabled != in_array($file, $conf_files_enabled, true)) {
 					if ($enabled) {
 						$err=0; $out=array();
-						@exec( 'cd '.qsa('/etc/gemeinschaft/asterisk/manager.conf.d-enabled').' 2>&1 && sudo -- ln -sn '.qsa('../manager.conf.d-available/'.$file) .' 2>&1', $out, $err );
+						@exec( 'cd '.qsa('/etc/gemeinschaft/asterisk/manager.conf.d-enabled').' 2>&1 && ln -sn '.qsa('../manager.conf.d-available/'.$file) .' 2>&1', $out, $err );
 						if ($err === 0) {
 							echo '<div class="successbox">';
 							echo sPrintF( htmlEnt(__("%s aktiviert.")),
@@ -92,7 +92,7 @@ if (array_key_exists('action', $_REQUEST) && $_REQUEST['action'] === 'save') {
 						}
 					} else {
 						$err=0; $out=array();
-						@exec( 'cd '.qsa('/etc/gemeinschaft/asterisk/manager.conf.d-enabled').' 2>&1 && sudo -- rm -f '.qsa($file) .' 2>&1', $out, $err );
+						@exec( 'cd '.qsa('/etc/gemeinschaft/asterisk/manager.conf.d-enabled').' 2>&1 && rm -f '.qsa($file) .' 2>&1', $out, $err );
 						if ($err === 0) {
 							echo '<div class="successbox">';
 							echo sPrintF( htmlEnt(__("%s deaktiviert.")),

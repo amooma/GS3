@@ -88,7 +88,7 @@ function gs_log( $level, $msg, $logfile=null, $fifo=false )
 			$logfile = '/var/log/gemeinschaft/'. $logfile;
 		
 		if (! @array_key_exists($logfile, $logfiles)) {
-			$sudo = (posix_getEUid()==0 ? '' : 'sudo ');
+			$sudo = '';  # /var/log/gemeinschaft is writable by everyone, no sudo needed
 						
 			# if the logfile should be a fifo but isn't then remove it so
 			# it will be created as a fifo
